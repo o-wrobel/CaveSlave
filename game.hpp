@@ -28,6 +28,13 @@ class Game {
         sf::CircleShape my_circle;
 
         sf::Clock clock;
+        sf::Time delta_time;
+
+        sf::Vector2i mouse_position;
+
+        sf::Vector2f camera_position;
+
+        
 
     public:
 
@@ -35,6 +42,12 @@ class Game {
         void GameLoop();
         void DrawGrid();
 
+        void HandleInput();
+
+        bool up_pressed;
+        bool down_pressed;
+        bool left_pressed;
+        bool right_pressed;
 };
 
 #endif // GAME_HPP

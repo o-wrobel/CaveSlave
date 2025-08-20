@@ -13,6 +13,7 @@ Grid::Grid(int x, int y)
     Build_Grid();
 }
 
+
 void Grid::Build_Grid() {
     //build line of stone
     for (int i = 0; i < size_x; i++) {
@@ -26,6 +27,7 @@ void Grid::Build_Grid() {
         }
     }
 };
+
 
 void Grid::SetTile(int x, int y, std::string tile_type) {
     if (x >= 0 && x < size_x && y >= 0 && y < size_y) {
