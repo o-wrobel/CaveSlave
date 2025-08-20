@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
 #include "game.hpp"
 #include "grid.hpp"
@@ -10,20 +11,23 @@ Game::Game(int window_size_x, int window_size_y)
     WINDOW_SIZE_Y(window_size_y),
     CENTER_X(window_size_x / 2),
     CENTER_Y(window_size_y / 2),
-    zoom_scale(6),
-
+    
     window(sf::VideoMode({WINDOW_SIZE_X, WINDOW_SIZE_Y}), "Cave Slave"),
+    zoom_scale(3),
 
+    tile_texture(sf::Vector2u(8, 8)), 
     stone_texture("sprites/stone.png"),
-    tile_sprite(stone_texture),
-    my_circle(120),
-    grid_size_x(10),
-    grid_size_y(10),
-    game_grid(grid_size_x, grid_size_y)
+    stone_floor_texture("sprites/stone_floor.png"),
+    tile_sprite(tile_texture),
 
+    grid_size_x(20),
+    grid_size_y(20),
+    game_grid(grid_size_x, grid_size_y),
+
+    my_circle(120)
         
 {
-    tile_sprite.setTexture(stone_texture);
+    // tile_sprite.setTexture(stone_texture);
     
 
     my_circle.setFillColor(sf::Color::Green);
@@ -34,7 +38,16 @@ void Game::DrawGrid() {
     for (int r = 0; r < grid_size_y; r++) {
         for (int c = 0; c < grid_size_x; c++) {
             //set texture for tile
-            sf::Sprite tile_sprite(stone_texture);
+            if (game_grid.GetTile(c, r).GetType() == "stone") {
+                tile_sprite.setTexture(stone_texture);
+            } else if (game_grid.GetTile(c, r).GetType() == "stone_floor") {
+                tile_sprite.setTexture(stone_floor_texture);
+            } else {
+                tile_sprite.setTexture(tile_texture);
+                std::cerr << "Error: Unknown tile type '" << game_grid.GetTile(c, r).GetType() << "'\n";
+                continue; // Skip drawing this tile
+            }
+
             //set position and scale for tile
             tile_sprite.setPosition(sf::Vector2(c * 8.f * zoom_scale, r * zoom_scale * 8.f));
             tile_sprite.setScale({zoom_scale, zoom_scale});
@@ -45,7 +58,6 @@ void Game::DrawGrid() {
 
 
 void Game::GameLoop() {
-
     // run the program as long as the window is open
     while (window.isOpen())
     {
@@ -62,10 +74,12 @@ void Game::GameLoop() {
 
         // draw everything here...
         window.draw(tile_sprite);
-        window.draw(my_circle);
-
+        
         DrawGrid();
 
+        window.draw(my_circle);
+
+        zoom_scale += clock.getElapsedTime().asSeconds() *0.0001f; // Decrease zoom scale based on elapsed time
         // end the current frame
         window.display();    
     }

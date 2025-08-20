@@ -10,7 +10,7 @@ class Tile {
 
     public:
         Tile(std::string type);
-        std::string GetType(int position_x, int position_y) const;
+        std::string GetType() const;
         void ChangeType(std::string new_type);
 
             

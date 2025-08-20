@@ -22,8 +22,12 @@ class Game {
 
         sf::RenderWindow window;
         sf::Texture stone_texture;
+        sf::Texture stone_floor_texture;
+        sf::Texture tile_texture;
         sf::Sprite tile_sprite;
         sf::CircleShape my_circle;
+
+        sf::Clock clock;
 
     public:
 
