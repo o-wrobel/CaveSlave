@@ -15,6 +15,7 @@ Grid::Grid(int x, int y)
 
 
 void Grid::Build_Grid() {
+    
     //build line of stone
     for (int i = 0; i < size_x; i++) {
         SetTile(i, 4, "stone_floor");
@@ -26,6 +27,15 @@ void Grid::Build_Grid() {
             SetTile(col, row, "stone");
         }
     }
+
+    //build some crates
+    SetTile(0, 0, "crate");
+    SetTile(size_x -1 , size_y - 1, "crate");
+    SetTile(0, size_y - 1, "crate");
+    SetTile(size_x -1 , 0, "crate");
+
+    SetTile(2, 3, "crate");
+    SetTile(3, 4, "crate");
 };
 
 

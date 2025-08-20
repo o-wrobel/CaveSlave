@@ -16,25 +16,29 @@ Game::Game(int window_size_x, int window_size_y)
     clock(),
 
     camera_position({0, 0}),
-    zoom_scale(3),
+    zoom_scale(2),
 
-    tile_texture(sf::Vector2u(8, 8)), 
+    tile_texture(sf::Vector2u(8, 8)),
+
     stone_texture("sprites/stone.png"),
     stone_floor_texture("sprites/stone_floor.png"),
+    crate_texture("sprites/crate.png"),
+
     tile_sprite(tile_texture),
 
-    grid_size_x(20),
-    grid_size_y(20),
+    grid_size_x(32),
+    grid_size_y(32),
     game_grid(grid_size_x, grid_size_y),
 
-    my_circle(120)
+    my_circle(5)
         
 {
     // tile_sprite.setTexture(stone_texture);
     
 
-    my_circle.setFillColor(sf::Color::Green);
-    my_circle.setPosition({CENTER_X - 120.f, CENTER_Y - 120.f});
+    my_circle.setFillColor(sf::Color::Red);
+    my_circle.setOrigin({5.f, 5.f});
+    my_circle.setPosition({CENTER_X, CENTER_Y});
 }
 
 
@@ -48,6 +52,8 @@ void Game::DrawGrid() {
                 tile_sprite.setTexture(stone_texture);
             } else if (game_grid.GetTile(col, row).GetType() == "stone_floor") {
                 tile_sprite.setTexture(stone_floor_texture);
+            } else if (game_grid.GetTile(col, row).GetType() == "crate") {
+                tile_sprite.setTexture(crate_texture);
             } else {
                 tile_sprite.setTexture(tile_texture);
                 std::cerr << "Error: Unknown tile type '" << game_grid.GetTile(col, row).GetType() << "'\n";
@@ -55,7 +61,7 @@ void Game::DrawGrid() {
             }
 
             //set position and scale for tile
-            tile_sprite.setPosition(sf::Vector2(col * zoom_scale * 8.f  + camera_position.x, row * zoom_scale * 8.f + camera_position.y));
+            tile_sprite.setPosition(sf::Vector2((col * zoom_scale - camera_position.x) * 8.f  , (row * zoom_scale - camera_position.y) * 8.f));
             tile_sprite.setScale({zoom_scale, zoom_scale});
             window.draw(tile_sprite);
         }
@@ -73,8 +79,13 @@ void Game::HandleInput() {
     left_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
     right_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 
+    forward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);
+    backward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down);
+
     camera_position.x += ((right_pressed - left_pressed) * 100) * delta_time.asSeconds(); // 
     camera_position.y += ((down_pressed - up_pressed) * 100) * delta_time.asSeconds(); //
+
+    zoom_scale += ((forward_pressed - backward_pressed) * 4) * delta_time.asSeconds();
 }
 
 void Game::GameLoop() {

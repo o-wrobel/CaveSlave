@@ -23,6 +23,7 @@ class Game {
         sf::RenderWindow window;
         sf::Texture stone_texture;
         sf::Texture stone_floor_texture;
+        sf::Texture crate_texture;
         sf::Texture tile_texture;
         sf::Sprite tile_sprite;
         sf::CircleShape my_circle;
@@ -34,6 +35,13 @@ class Game {
 
         sf::Vector2f camera_position;
 
+        bool up_pressed;
+        bool down_pressed;
+        bool left_pressed;
+        bool right_pressed;
+
+        bool forward_pressed;
+        bool backward_pressed;
         
 
     public:
@@ -44,10 +52,7 @@ class Game {
 
         void HandleInput();
 
-        bool up_pressed;
-        bool down_pressed;
-        bool left_pressed;
-        bool right_pressed;
+
 };
 
 #endif // GAME_HPP
