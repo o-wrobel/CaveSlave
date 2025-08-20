@@ -2,26 +2,34 @@
 #define GAME_HPP
 
 #include <iostream>
-#include <filesystem>
 #include <SFML/Graphics.hpp>
+
+#include "grid.hpp"
 
 class Game {
     private:
-        const unsigned int WINDOW_SIZE_X = 720;
-        const unsigned int WINDOW_SIZE_Y = 720;
+        const unsigned int WINDOW_SIZE_X;
+        const unsigned int WINDOW_SIZE_Y;
         
-        const int CENTER_Y = WINDOW_SIZE_Y / 2;
-        const int CENTER_X = WINDOW_SIZE_X / 2;
+        const int CENTER_Y;
+        const int CENTER_X;
+
+        float zoom_scale;
+
+        int grid_size_x, grid_size_y;
+
+        Grid game_grid;
 
         sf::RenderWindow window;
-        sf::Texture my_texture;
-        sf::Sprite my_sprite;
+        sf::Texture stone_texture;
+        sf::Sprite tile_sprite;
         sf::CircleShape my_circle;
+
     public:
 
         Game(int window_size_x, int window_size_y); // Constructor declaration
-        void run();
-
+        void GameLoop();
+        void DrawGrid();
 
 };
 
