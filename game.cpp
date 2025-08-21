@@ -6,13 +6,13 @@
 #include "grid.hpp"
 #include "tile.hpp"
 
-Game::Game(int window_size_x, int window_size_y)
-  : WINDOW_SIZE_X(window_size_x),
-    WINDOW_SIZE_Y(window_size_y),
-    CENTER_X(window_size_x / 2),
-    CENTER_Y(window_size_y / 2),
+Game::Game(unsigned int window_size_x, unsigned int window_size_y)
+  : kWindowSize({window_size_x, window_size_y}),
+    kWindowCenter({kWindowSize.x / 2, kWindowSize.y / 2}),
+
+    tile_resoultion(8),
     
-    window(sf::VideoMode({WINDOW_SIZE_X, WINDOW_SIZE_Y}), "Cave Slave"),
+    window(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "Cave Slave"),
     clock(),
 
     camera_position({0, 0}),
@@ -33,12 +33,9 @@ Game::Game(int window_size_x, int window_size_y)
     my_circle(5)
         
 {
-    // tile_sprite.setTexture(stone_texture);
-    
-
     my_circle.setFillColor(sf::Color::Red);
     my_circle.setOrigin({5.f, 5.f});
-    my_circle.setPosition({CENTER_X, CENTER_Y});
+    my_circle.setPosition({kWindowCenter.x *1.f, kWindowCenter.y * 1.f});
 }
 
 
@@ -60,8 +57,14 @@ void Game::DrawGrid() {
                 continue; // Skip drawing this tile
             }
 
-            //set position and scale for tile
-            tile_sprite.setPosition(sf::Vector2((col * zoom_scale - camera_position.x) * 8.f  , (row * zoom_scale - camera_position.y) * 8.f));
+            // set position and scale for tile
+            tile_sprite.setPosition(sf::Vector2(
+                (col * zoom_scale - camera_position.x) * tile_resoultion, 
+                (row * zoom_scale - camera_position.y) * tile_resoultion
+            ));
+
+
+
             tile_sprite.setScale({zoom_scale, zoom_scale});
             window.draw(tile_sprite);
         }
