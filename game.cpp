@@ -22,8 +22,10 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     stone_texture("sprites/stone.png"),
     stone_floor_texture("sprites/stone_floor.png"),
     crate_texture("sprites/crate.png"),
+    empty_tile_texture("sprites/empty_tile.png"),
 
     tile_sprite(tile_texture),
+    tile_preview_sprite(stone_texture),
 
     grid_size(64, 64),
     game_grid(grid_size.x, grid_size.y),
@@ -36,6 +38,13 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     my_circle.setFillColor(sf::Color::Blue);
     my_circle.setOrigin({3.f, 3.f});
     my_circle.setPosition({kWindowSize.x * 0.02f, kWindowSize.y * 0.02f});
+
+    // set position for tile
+    tile_preview_sprite.setOrigin({4.f, 4.f});
+    tile_preview_sprite.setPosition({kWindowSize.x * 0.92f, kWindowSize.y * 0.10f});
+    tile_preview_sprite.setColor(sf::Color(255, 255, 255, 200));
+
+    tile_preview_sprite.setScale(sf::Vector2f(6.f, 6.f));
 
 }
 
@@ -81,7 +90,9 @@ void Game::GameLoop() {
 
         // draw ui stuff here...
         window.setView(window.getDefaultView());
+
         window.draw(my_circle);
+        DrawTilePreview(tile_place_type);
 
         // end the current frame
         window.display();
@@ -141,6 +152,33 @@ void Game::DrawTile(Grid grid, int x, int y) {
     window.draw(tile_sprite);
 }
 
+
+void Game::DrawTilePreview(int tile_place_type){
+
+    if (true){ // Check if tile_place_type has changed
+        switch (tile_place_type)
+        {
+        case 1:
+            tile_preview_sprite.setTexture(stone_texture);
+            break;
+
+        case 2:
+            tile_preview_sprite.setTexture(stone_floor_texture);
+            break;
+
+        case 3:
+            tile_preview_sprite.setTexture(crate_texture);
+            break;
+        
+        default:
+            tile_preview_sprite.setTexture(empty_tile_texture);
+            break;
+        }
+    }
+
+    // draw tile
+    window.draw(tile_preview_sprite);
+}
 
 void Game::HandleInput() { //This goes in the event polling loop
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {

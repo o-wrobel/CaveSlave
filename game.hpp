@@ -31,8 +31,13 @@ class Game {
         sf::Texture stone_texture;
         sf::Texture stone_floor_texture;
         sf::Texture crate_texture;
+        sf::Texture empty_tile_texture;
+
         sf::Texture tile_texture;
+
         sf::Sprite tile_sprite;
+        sf::FloatRect tile_preview_bounds;
+        sf::Sprite tile_preview_sprite;
 
         sf::Vector2i mouse_position;
         sf::Vector2f mouse_world_position;
@@ -58,6 +63,7 @@ class Game {
 
         void DrawGrid(Grid grid);
         void DrawTile(Grid grid, int x, int y);
+        void DrawTilePreview(int tile_place_type);
         void HandleInput();
         void HandleCamera();
         void HandleTilePlacing();
