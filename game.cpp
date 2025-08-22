@@ -14,7 +14,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     tile_resoultion(8),
     view(sf::FloatRect({0, 0}, {kWindowSize.x * 0.5f, kWindowSize.y * 0.5f})), 
     
-    window(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "Cave Slave"),
+    window(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "project"),
     clock(),
 
     tile_texture(sf::Vector2u(8, 8)),
@@ -36,6 +36,52 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     my_circle.setOrigin({3.f, 3.f});
     my_circle.setPosition({kWindowSize.x * 0.02f, kWindowSize.y * 0.02f});
 
+}
+
+
+void Game::GameLoop() {
+    // run the program as long as the window is open
+    while (window.isOpen())
+    {        
+        
+        // check all the window's events that were triggered since the last iteration of the loop
+        while (const std::optional event = window.pollEvent())
+        {
+            // "close requested" event: we close the window
+            if (event->is<sf::Event::Closed>())
+                window.close();
+            
+            //check if mouse buttons are pressed (for the first time in a while)
+            //Any mouse inputs need to be HERE, not outside the event polling loop
+            if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
+                rmb_clicked = mouseButtonPressed->button == sf::Mouse::Button::Right;
+                lmb_clicked = mouseButtonPressed->button == sf::Mouse::Button::Left;
+                HandleMouse();
+            }
+            
+        }
+
+        delta_time = clock.restart();
+
+        HandleInput();
+        HandleCamera();
+        
+        // clear the window with black color
+        window.clear(sf::Color::Black);
+
+        // draw view stuff here...
+        window.setView(view);
+        SetViewVariables();
+
+        DrawGrid(game_grid);
+
+        // draw ui stuff here...
+        window.setView(window.getDefaultView());
+        window.draw(my_circle);
+
+        // end the current frame
+        window.display();    
+    }
 }
 
 
@@ -110,9 +156,6 @@ void Game::HandleInput() {
     forward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);
     backward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down);
 
-    //mouse controls
-    lmb_pressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
-    rmb_pressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
     mouse_position = sf::Mouse::getPosition(window);
     mouse_world_position = window.mapPixelToCoords(mouse_position, view);
     mouse_grid_position = sf::Vector2i(
@@ -139,16 +182,32 @@ void Game::HandleCamera() {
 
 
 void Game::HandleMouse() {
-    if (lmb_pressed) {
+
+    my_circle.setFillColor(sf::Color::Blue);
+    if (lmb_clicked) {
+        if (game_grid.GetTile(mouse_grid_position.x, mouse_grid_position.y).GetType() == 3) {
+            game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "null");
+            return;
+        }
         game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "crate");
         my_circle.setFillColor(sf::Color::Green);
-    } else if (rmb_pressed) {
+
+        return;
+    }
+    if (rmb_clicked) {
+        if (game_grid.GetTile(mouse_grid_position.x, mouse_grid_position.y).GetType() == 2) {
+            game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "null");
+            return;
+        }
         game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "stone_floor");
         my_circle.setFillColor(sf::Color::Red);
-    } else {
-        my_circle.setFillColor(sf::Color::Blue);
+
+        return;
     }
+    rmb_clicked = lmb_clicked = false;
+
 }
+
 
 void Game::SetViewVariables() {
     view_bounds = view.getViewport();
@@ -164,42 +223,4 @@ void Game::SetViewVariables() {
         view_start_position.x + (view_size.x / tile_resoultion) + 2,
         view_start_position.y + (view_size.y / tile_resoultion) + 2
     );
-}
-
-
-void Game::GameLoop() {
-    // run the program as long as the window is open
-    while (window.isOpen())
-    {        
-        
-        // check all the window's events that were triggered since the last iteration of the loop
-        while (const std::optional event = window.pollEvent())
-        {
-            // "close requested" event: we close the window
-            if (event->is<sf::Event::Closed>())
-                window.close();
-        }
-
-        delta_time = clock.restart();
-
-        HandleInput();
-        HandleCamera();
-        HandleMouse();
-
-        // clear the window with black color
-        window.clear(sf::Color::Black);
-
-        // draw view stuff here...
-        window.setView(view);
-        SetViewVariables();
-
-        DrawGrid(game_grid);
-
-        // draw ui stuff here...
-        window.setView(window.getDefaultView());
-        window.draw(my_circle);
-
-        // end the current frame
-        window.display();    
-    }
 }

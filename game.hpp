@@ -52,8 +52,8 @@ class Game {
         bool forward_pressed;
         bool backward_pressed;
 
-        bool lmb_pressed;
-        bool rmb_pressed;
+        bool lmb_clicked;
+        bool rmb_clicked;
 
         // Private methods
 
