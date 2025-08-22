@@ -3,16 +3,16 @@
 
 #include "tile.hpp"
 
-Tile::Tile(int type) : tile_id(type) {
+Tile::Tile(int type) : type_id(type) , type_changed(true) {
     // Constructor implementation can be added if needed
 }
 
 
 int Tile::GetType() const {
-    return tile_id;
+    return type_id;
 }
 
 
 void Tile::ChangeType(int new_type) {
-    tile_id = new_type;
+    type_id = new_type;
 }

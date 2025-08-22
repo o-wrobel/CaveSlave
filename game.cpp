@@ -59,31 +59,36 @@ void Game::DrawGrid(Grid grid) {
 
 void Game::DrawTile(Grid grid, int x, int y) {
 
-    // set texture for tile
-    switch (grid.GetTile(x, y).GetType())
-    {
-    case 1:
-        tile_sprite.setTexture(stone_texture);
-        break;
+    Tile tile = grid.GetTile(x, y);
 
-    case 2:
-        tile_sprite.setTexture(stone_floor_texture);
-        break;
+    if (tile.type_changed){
+        switch (tile.GetType())
+        {
+        case 1:
+            tile_sprite.setTexture(stone_texture);
+            break;
 
-    case 3:
-        tile_sprite.setTexture(crate_texture);
-        break;
-    
-    default:
-        tile_sprite.setTexture(tile_texture);
-        break;
-    }
+        case 2:
+            tile_sprite.setTexture(stone_floor_texture);
+            break;
 
-    // set position for tile
-    tile_sprite.setPosition(sf::Vector2f(
+        case 3:
+            tile_sprite.setTexture(crate_texture);
+            break;
+        
+        default:
+            tile_sprite.setTexture(tile_texture);
+            break;
+        } 
+
+        // set position for tile
+        tile_sprite.setPosition(sf::Vector2f(
         (x) * tile_resoultion, 
         (y) * tile_resoultion
-    ));
+        ));
+
+        tile.type_changed = false;
+    }   
 
     // draw tile
     window.draw(tile_sprite);

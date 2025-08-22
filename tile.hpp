@@ -6,12 +6,15 @@
 
 class Tile {
     private:
-    int tile_id;
+        int type_id;
 
     public:
         Tile(int type);
+        
         int GetType() const;
         void ChangeType(int new_type);
+
+        bool type_changed;
 
 };
 
