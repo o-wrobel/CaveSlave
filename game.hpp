@@ -10,6 +10,8 @@ class Game {
     private:
         const sf::Vector2u kWindowSize; 
         const sf::Vector2u kWindowCenter;
+        const int kTileResolution;
+        const int kTileTypeCount = 4;
         sf::RenderWindow window;
         sf::View view;
         sf::Clock clock;
@@ -23,12 +25,8 @@ class Game {
         sf::Vector2i view_start_position;
         sf::Vector2i view_end_position;
 
-        
-        const int tile_resoultion;
         sf::Vector2i grid_size;
-
         Grid game_grid;
-
         
         sf::Texture stone_texture;
         sf::Texture stone_floor_texture;
@@ -36,11 +34,12 @@ class Game {
         sf::Texture tile_texture;
         sf::Sprite tile_sprite;
 
-        sf::CircleShape my_circle;
-
         sf::Vector2i mouse_position;
         sf::Vector2f mouse_world_position;
         sf::Vector2i mouse_grid_position;
+
+        int tile_place_type;
+        sf::CircleShape my_circle;
 
         // Input state variables
 
@@ -61,7 +60,7 @@ class Game {
         void DrawTile(Grid grid, int x, int y);
         void HandleInput();
         void HandleCamera();
-        void HandleMouse();
+        void HandleTilePlacing();
         void SetViewVariables();
 
     public:

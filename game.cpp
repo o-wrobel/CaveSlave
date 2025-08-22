@@ -11,7 +11,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
   : kWindowSize({window_size_x, window_size_y}),
     kWindowCenter({kWindowSize.x / 2, kWindowSize.y / 2}),
 
-    tile_resoultion(8),
+    kTileResolution(8),
     view(sf::FloatRect({0, 0}, {kWindowSize.x * 0.5f, kWindowSize.y * 0.5f})), 
     
     window(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "project"),
@@ -28,7 +28,8 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     grid_size(64, 64),
     game_grid(grid_size.x, grid_size.y),
 
-    my_circle(6)
+    my_circle(6),
+    tile_place_type(0)
         
 {   
 
@@ -43,24 +44,26 @@ void Game::GameLoop() {
     // run the program as long as the window is open
     while (window.isOpen())
     {        
-        
+        my_circle.setFillColor(sf::Color::Blue);
+
         // check all the window's events that were triggered since the last iteration of the loop
         while (const std::optional event = window.pollEvent())
         {
             // "close requested" event: we close the window
-            if (event->is<sf::Event::Closed>())
+            if (event->is<sf::Event::Closed>()){
                 window.close();
+            }
             
             //check if mouse buttons are pressed (for the first time in a while)
             //Any mouse inputs need to be HERE, not outside the event polling loop
             if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
                 rmb_clicked = mouseButtonPressed->button == sf::Mouse::Button::Right;
                 lmb_clicked = mouseButtonPressed->button == sf::Mouse::Button::Left;
-                HandleMouse();
+                HandleTilePlacing();
             }
             
         }
-
+        
         delta_time = clock.restart();
 
         HandleInput();
@@ -69,10 +72,11 @@ void Game::GameLoop() {
         // clear the window with black color
         window.clear(sf::Color::Black);
 
-        // draw view stuff here...
+        //view stuff
         window.setView(view);
         SetViewVariables();
 
+        //Draw game world objects
         DrawGrid(game_grid);
 
         // draw ui stuff here...
@@ -80,7 +84,8 @@ void Game::GameLoop() {
         window.draw(my_circle);
 
         // end the current frame
-        window.display();    
+        window.display();
+
     }
 }
 
@@ -89,10 +94,6 @@ void Game::DrawGrid(Grid grid) {
 
     // only iterates over tiles within view bounds to improve performance
     // thanks windsurf
-
-    // for (int row = 0; row < grid_size.y; row++) {
-    //     for (int col = 0; col < grid_size.x; col++) {
-
     for (int row = view_start_position.y; row < view_end_position.y; row++) {
         for (int col = view_start_position.x; col < view_end_position.x; col++) {
 
@@ -129,8 +130,8 @@ void Game::DrawTile(Grid grid, int x, int y) {
 
         // set position for tile
         tile_sprite.setPosition(sf::Vector2f(
-        (x) * tile_resoultion, 
-        (y) * tile_resoultion
+        (x) * kTileResolution, 
+        (y) * kTileResolution
         ));
 
         tile.type_changed = false;
@@ -141,7 +142,7 @@ void Game::DrawTile(Grid grid, int x, int y) {
 }
 
 
-void Game::HandleInput() {
+void Game::HandleInput() { //This goes in the event polling loop
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
         window.close();
     }
@@ -159,8 +160,8 @@ void Game::HandleInput() {
     mouse_position = sf::Mouse::getPosition(window);
     mouse_world_position = window.mapPixelToCoords(mouse_position, view);
     mouse_grid_position = sf::Vector2i(
-        mouse_world_position.x / tile_resoultion,
-        mouse_world_position.y / tile_resoultion
+        mouse_world_position.x / kTileResolution,
+        mouse_world_position.y / kTileResolution
     );
     
 }
@@ -181,29 +182,25 @@ void Game::HandleCamera() {
 }
 
 
-void Game::HandleMouse() {
-
-    my_circle.setFillColor(sf::Color::Blue);
+void Game::HandleTilePlacing() {
+    
     if (lmb_clicked) {
-        if (game_grid.GetTile(mouse_grid_position.x, mouse_grid_position.y).GetType() == 3) {
-            game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "null");
-            return;
-        }
-        game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "crate");
+
+        game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, tile_place_type);
         my_circle.setFillColor(sf::Color::Green);
 
         return;
     }
     if (rmb_clicked) {
-        if (game_grid.GetTile(mouse_grid_position.x, mouse_grid_position.y).GetType() == 2) {
-            game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "null");
-            return;
+        tile_place_type++;
+        if (tile_place_type >= kTileTypeCount) {
+            tile_place_type = 0;
         }
-        game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "stone_floor");
         my_circle.setFillColor(sf::Color::Red);
 
         return;
     }
+    
     rmb_clicked = lmb_clicked = false;
 
 }
@@ -215,12 +212,12 @@ void Game::SetViewVariables() {
     view_size = view.getSize();
 
     view_start_position = sf::Vector2i(
-        view_center.x / tile_resoultion - (view_size.x / tile_resoultion / 2),
-        view_center.y / tile_resoultion - (view_size.y / tile_resoultion / 2)
+        view_center.x / kTileResolution - (view_size.x / kTileResolution / 2),
+        view_center.y / kTileResolution - (view_size.y / kTileResolution / 2)
     );
 
     view_end_position = sf::Vector2i(
-        view_start_position.x + (view_size.x / tile_resoultion) + 2,
-        view_start_position.y + (view_size.y / tile_resoultion) + 2
+        view_start_position.x + (view_size.x / kTileResolution) + 2,
+        view_start_position.y + (view_size.y / kTileResolution) + 2
     );
 }
