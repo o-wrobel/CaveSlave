@@ -9,7 +9,7 @@ Grid::Grid(int x, int y)
     : size(x, y)
     {
     
-    tile_grid.resize(size.y, std::vector<Tile>(size.x, Tile("null")));
+    tile_grid.resize(size.y, std::vector<Tile>(size.x, Tile(0)));
 
     Build_Grid();
 }
@@ -17,9 +17,9 @@ Grid::Grid(int x, int y)
 
 void Grid::Build_Grid() {
     
-    //build line of stone
+    //build line of stone floor
     for (int i = 0; i < size.x; i++) {
-        SetTile(i, 4, "stone_floor");
+        SetTile(i, 4,  "stone_floor");
     }
 
     //build stone underneath
@@ -45,9 +45,24 @@ void Grid::Build_Grid() {
 };
 
 
-void Grid::SetTile(int x, int y, std::string tile_type) {
+void Grid::SetTile(int x, int y, int tile_type) {
     if (x >= 0 && x < size.x && y >= 0 && y < size.x) {
+
         tile_grid[y][x].ChangeType(tile_type);
+
+    } else {
+        std::cerr << "Error: Attempted to set tile out of bounds (" << x << ", " << y << ")\n";
+    }
+}
+
+void Grid::SetTile(int x, int y, const std::string& type_name) {
+    if (x >= 0 && x < size.x && y >= 0 && y < size.x) {
+        if (type_name != "") {
+            tile_grid[y][x].ChangeType(GetTypeID(type_name));
+        } else {
+            std::cerr << "Error: No tile type specified (" << x << ", " << y << ")\n";
+        }
+        
     } else {
         std::cerr << "Error: Attempted to set tile out of bounds (" << x << ", " << y << ")\n";
     }
@@ -59,7 +74,14 @@ Tile Grid::GetTile(int x, int y) const {
         return tile_grid[y][x];
     } else {
         std::cerr << "Error: Attempted to get tile out of bounds (" << x << ", " << y << ")\n";
-        return Tile("null"); // Return a default tile if out of bounds
+        return Tile(0); // Return a default tile if out of bounds
     }
 }
 
+int Grid::GetTypeID(std::string type_name) {
+    if (type_name == "stone") return 1;
+    if (type_name == "stone_floor") return 2;
+    if (type_name == "crate") return 3;
+    return 0;
+    
+}

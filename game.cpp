@@ -25,7 +25,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
 
     tile_sprite(tile_texture),
 
-    grid_size(8, 8),
+    grid_size(64, 64),
     game_grid(grid_size.x, grid_size.y),
 
     my_circle(5)
@@ -39,28 +39,41 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
 }
 
 
-void Game::DrawGrid() {
+void Game::DrawGrid(Grid grid) {
     for (int row = 0; row < grid_size.y; row++) {
         for (int col = 0; col < grid_size.x; col++) {
 
-            DrawTile(col, row);
+            DrawTile(grid, col, row);
 
         }
     }
 }
 
 
-void Game::DrawTile(int x, int y) {
-    if (game_grid.GetTile(x, y).GetType() == "stone") {
+void Game::DrawTile(Grid grid, int x, int y) {
+
+    // 0 for null, 1 for stone, 2 for stone_floor, 3 for crate
+    //PLEASE CHANGE THIS LATER TO A HASHTABLE OR SOMETHING
+
+    switch (grid.GetTile(x, y).GetType())
+    {
+    case 1:
         tile_sprite.setTexture(stone_texture);
-    } else if (game_grid.GetTile(x, y).GetType() == "stone_floor") {
+        break;
+
+    case 2:
         tile_sprite.setTexture(stone_floor_texture);
-    } else if (game_grid.GetTile(x, y).GetType() == "crate") {
+        break;
+
+    case 3:
         tile_sprite.setTexture(crate_texture);
-    } else {
+        break;
+    
+    default:
         tile_sprite.setTexture(tile_texture);
-        std::cerr << "Error: Unknown tile type '" << game_grid.GetTile(x, y).GetType() << "'\n";; // Skip drawing this tile
+        break;
     }
+
 
     // set position for tile
     tile_sprite.setPosition(sf::Vector2f(
@@ -126,7 +139,7 @@ void Game::GameLoop() {
 
         // draw view stuff here...
         window.setView(view);
-        DrawGrid();
+        DrawGrid(game_grid);
 
         // draw ui stuff here...
         window.setView(window.getDefaultView());

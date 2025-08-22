@@ -31,6 +31,7 @@ class Game {
         sf::CircleShape my_circle;
 
         sf::Vector2i mouse_position;
+        sf::Vector2f mouse_grid_position;
 
         // Input state variables
 
@@ -44,8 +45,8 @@ class Game {
 
         // Private methods
 
-        void DrawGrid();
-        void DrawTile(int x, int y);
+        void DrawGrid(Grid grid);
+        void DrawTile(Grid grid, int x, int y);
         void HandleInput();
         void HandleCamera();
 

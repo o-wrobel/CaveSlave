@@ -6,15 +6,12 @@
 
 class Tile {
     private:
-    std::string tile_type;
+    int tile_id;
 
     public:
-        Tile(std::string type);
-        std::string GetType() const;
-        void ChangeType(std::string new_type);
-
-            
-
+        Tile(int type);
+        int GetType() const;
+        void ChangeType(int new_type);
 
 };
 
