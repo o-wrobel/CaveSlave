@@ -11,6 +11,7 @@ class Game {
         const sf::Vector2u kWindowSize; 
         const sf::Vector2u kWindowCenter;
         sf::RenderWindow window;
+        sf::View view;
         sf::Clock clock;
         sf::Time delta_time;
 
@@ -49,6 +50,7 @@ class Game {
 
         void DrawGrid();
         void HandleInput();
+        void HandleCamera();
 
     public:
 
