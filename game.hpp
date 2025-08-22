@@ -17,7 +17,6 @@ class Game {
 
         
         const int tile_resoultion;
-        int grid_size_x, grid_size_y;
         sf::Vector2i grid_size;
 
         Grid game_grid;
@@ -33,9 +32,6 @@ class Game {
 
         sf::Vector2i mouse_position;
 
-        sf::Vector2f camera_position;
-        float zoom_scale;
-
         // Input state variables
 
         bool up_pressed;
@@ -49,6 +45,7 @@ class Game {
         // Private methods
 
         void DrawGrid();
+        void DrawTile(int x, int y);
         void HandleInput();
         void HandleCamera();
 
