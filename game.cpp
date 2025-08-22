@@ -28,13 +28,13 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     grid_size(64, 64),
     game_grid(grid_size.x, grid_size.y),
 
-    my_circle(5)
+    my_circle(6)
         
 {   
 
-    my_circle.setFillColor(sf::Color::Red);
-    my_circle.setOrigin({5.f, 5.f});
-    my_circle.setPosition({kWindowCenter.x * 1.f, kWindowCenter.y * 1.f});
+    my_circle.setFillColor(sf::Color::Blue);
+    my_circle.setOrigin({3.f, 3.f});
+    my_circle.setPosition({kWindowSize.x * 0.02f, kWindowSize.y * 0.02f});
 
 }
 
@@ -106,16 +106,27 @@ void Game::HandleInput() {
     left_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
     right_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 
-    //camera controls
+   //camera controls
     forward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);
     backward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down);
 
+    //mouse controls
+    lmb_pressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+    rmb_pressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
+    mouse_position = sf::Mouse::getPosition(window);
+    mouse_world_position = window.mapPixelToCoords(mouse_position, view);
+    mouse_grid_position = sf::Vector2i(
+        mouse_world_position.x / tile_resoultion,
+        mouse_world_position.y / tile_resoultion
+    );
+    
 }
 
 
 void Game::HandleCamera() {
 
     view.zoom( 1 + ((backward_pressed - forward_pressed ) * 2) * delta_time.asSeconds());
+    view_zoom_factor =  window.getSize().x / view.getSize().x;
 
     int camera_speed =  1 * view.getSize().x;
 
@@ -126,6 +137,18 @@ void Game::HandleCamera() {
     
 }
 
+
+void Game::HandleMouse() {
+    if (lmb_pressed) {
+        game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "crate");
+        my_circle.setFillColor(sf::Color::Green);
+    } else if (rmb_pressed) {
+        game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "stone_floor");
+        my_circle.setFillColor(sf::Color::Red);
+    } else {
+        my_circle.setFillColor(sf::Color::Blue);
+    }
+}
 
 void Game::SetViewVariables() {
     view_bounds = view.getViewport();
@@ -161,6 +184,7 @@ void Game::GameLoop() {
 
         HandleInput();
         HandleCamera();
+        HandleMouse();
 
         // clear the window with black color
         window.clear(sf::Color::Black);

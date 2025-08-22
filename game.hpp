@@ -18,6 +18,7 @@ class Game {
         sf::FloatRect view_bounds;
         sf::Vector2f view_center;
         sf::Vector2f view_size;
+        float view_zoom_factor;
 
         sf::Vector2i view_start_position;
         sf::Vector2i view_end_position;
@@ -38,7 +39,8 @@ class Game {
         sf::CircleShape my_circle;
 
         sf::Vector2i mouse_position;
-        sf::Vector2f mouse_grid_position;
+        sf::Vector2f mouse_world_position;
+        sf::Vector2i mouse_grid_position;
 
         // Input state variables
 
@@ -50,12 +52,16 @@ class Game {
         bool forward_pressed;
         bool backward_pressed;
 
+        bool lmb_pressed;
+        bool rmb_pressed;
+
         // Private methods
 
         void DrawGrid(Grid grid);
         void DrawTile(Grid grid, int x, int y);
         void HandleInput();
         void HandleCamera();
+        void HandleMouse();
         void SetViewVariables();
 
     public:

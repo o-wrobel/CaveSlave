@@ -15,4 +15,5 @@ int Tile::GetType() const {
 
 void Tile::ChangeType(int new_type) {
     type_id = new_type;
+    type_changed = true;
 }
