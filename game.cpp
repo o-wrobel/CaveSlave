@@ -40,8 +40,15 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
 
 
 void Game::DrawGrid(Grid grid) {
-    for (int row = 0; row < grid_size.y; row++) {
-        for (int col = 0; col < grid_size.x; col++) {
+
+    // only iterates over tiles within view bounds to improve performance
+    // thanks windsurf
+
+    // for (int row = 0; row < grid_size.y; row++) {
+    //     for (int col = 0; col < grid_size.x; col++) {
+
+    for (int row = view_start_position.y; row < view_end_position.y; row++) {
+        for (int col = view_start_position.x; col < view_end_position.x; col++) {
 
             DrawTile(grid, col, row);
 
@@ -52,9 +59,7 @@ void Game::DrawGrid(Grid grid) {
 
 void Game::DrawTile(Grid grid, int x, int y) {
 
-    // 0 for null, 1 for stone, 2 for stone_floor, 3 for crate
-    //PLEASE CHANGE THIS LATER TO A HASHTABLE OR SOMETHING
-
+    // set texture for tile
     switch (grid.GetTile(x, y).GetType())
     {
     case 1:
@@ -74,7 +79,6 @@ void Game::DrawTile(Grid grid, int x, int y) {
         break;
     }
 
-
     // set position for tile
     tile_sprite.setPosition(sf::Vector2f(
         (x) * tile_resoultion, 
@@ -91,11 +95,13 @@ void Game::HandleInput() {
         window.close();
     }
 
+    //movement controls
     up_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
     down_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S);
     left_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
     right_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 
+    //camera controls
     forward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);
     backward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down);
 
@@ -113,6 +119,23 @@ void Game::HandleCamera() {
         ((down_pressed - up_pressed) * camera_speed) * delta_time.asSeconds()
     ));
     
+}
+
+
+void Game::SetViewVariables() {
+    view_bounds = view.getViewport();
+    view_center = view.getCenter();
+    view_size = view.getSize();
+
+    view_start_position = sf::Vector2i(
+        view_center.x / tile_resoultion - (view_size.x / tile_resoultion / 2),
+        view_center.y / tile_resoultion - (view_size.y / tile_resoultion / 2)
+    );
+
+    view_end_position = sf::Vector2i(
+        view_start_position.x + (view_size.x / tile_resoultion) + 2,
+        view_start_position.y + (view_size.y / tile_resoultion) + 2
+    );
 }
 
 
@@ -139,6 +162,8 @@ void Game::GameLoop() {
 
         // draw view stuff here...
         window.setView(view);
+        SetViewVariables();
+
         DrawGrid(game_grid);
 
         // draw ui stuff here...

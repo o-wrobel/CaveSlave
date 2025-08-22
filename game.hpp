@@ -15,6 +15,13 @@ class Game {
         sf::Clock clock;
         sf::Time delta_time;
 
+        sf::FloatRect view_bounds;
+        sf::Vector2f view_center;
+        sf::Vector2f view_size;
+
+        sf::Vector2i view_start_position;
+        sf::Vector2i view_end_position;
+
         
         const int tile_resoultion;
         sf::Vector2i grid_size;
@@ -49,6 +56,7 @@ class Game {
         void DrawTile(Grid grid, int x, int y);
         void HandleInput();
         void HandleCamera();
+        void SetViewVariables();
 
     public:
 

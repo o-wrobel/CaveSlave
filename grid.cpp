@@ -55,6 +55,7 @@ void Grid::SetTile(int x, int y, int tile_type) {
     }
 }
 
+
 void Grid::SetTile(int x, int y, const std::string& type_name) {
     if (x >= 0 && x < size.x && y >= 0 && y < size.x) {
         if (type_name != "") {
