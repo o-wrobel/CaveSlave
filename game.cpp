@@ -134,24 +134,22 @@ void Game::CheckEvents() {
 
 
 void Game::DrawGrid(Grid grid) {
-
+    Tile tile;
     // only iterates over tiles within view bounds to improve performance
     // thanks windsurf
     for (int row = view_start_position.y; row < view_end_position.y; row++) {
         for (int col = view_start_position.x; col < view_end_position.x; col++) {
-
-            DrawTile(grid, col, row);
+            tile = grid.GetTile(col, row);
+            DrawTile(tile, col, row);
 
         }
     }
 }
 
 
-void Game::DrawTile(Grid grid, int x, int y) {
+void Game::DrawTile(Tile tile, int x, int y) {
 
-    Tile tile = grid.GetTile(x, y);
-
-    if (tile.type_changed){
+    if (tile.type_changed && !tile.GetType() == 0) {
         switch (tile.GetType())
         {
         case 1:

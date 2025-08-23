@@ -9,7 +9,7 @@ Grid::Grid(int x, int y)
     : size(x, y)
     {
     
-    tile_grid.resize(size.y, std::vector<Tile>(size.x, Tile(0)));
+    tile_grid.resize(size.y, std::vector<Tile>(size.x, Tile()));
 
     Build_Grid();
 }
@@ -78,6 +78,7 @@ Tile Grid::GetTile(int x, int y) const {
         return Tile(0); // Return a default tile if out of bounds
     }
 }
+
 
 int Grid::GetTypeID(std::string type_name) {
     if (type_name == "stone") return 1;

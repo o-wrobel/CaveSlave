@@ -9,7 +9,7 @@ class Tile {
         int type_id;
 
     public:
-        Tile(int type);
+        Tile(int type = 0);
         
         int GetType() const;
         void ChangeType(int new_type);

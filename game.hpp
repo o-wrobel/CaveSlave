@@ -69,7 +69,7 @@ class Game {
 
         void CheckEvents();
         void DrawGrid(Grid grid);
-        void DrawTile(Grid grid, int x, int y);
+        void DrawTile(Tile tile, int x, int y);
         void SetInputVariables();
         void HandleCamera();
         void HandleTilePlacing();
