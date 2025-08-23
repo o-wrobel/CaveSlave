@@ -106,13 +106,11 @@ void Game::CheckEvents() {
         }
 
         //check if mouse buttons are pressed (for the first time in a while)
-        //Any mouse inputs need to be HERE, not outside the event polling loop
         rmb_pressed = false;
         lmb_pressed = false;
         if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
             rmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Right;
             lmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Left;
-            
         }
 
         //check mouse wheel movement
@@ -143,7 +141,9 @@ void Game::DrawGrid(Grid grid) {
     for (int row = view_start_position.y; row < view_end_position.y; row++) {
         for (int col = view_start_position.x; col < view_end_position.x; col++) {
             tile = grid.GetTile(col, row);
-            DrawTile(tile, col, row);
+            if (tile.GetType() != 0){
+                DrawTile(tile, col, row);
+            }
 
         }
     }
@@ -151,10 +151,8 @@ void Game::DrawGrid(Grid grid) {
 
 
 void Game::DrawTile(Tile tile, int x, int y) {
-
-    if (tile.type_changed && !tile.GetType() == 0) {
-        switch (tile.GetType())
-        {
+    if (tile.type_changed){
+        switch (tile.GetType()){
         case 1:
             tile_sprite.setTexture(stone_texture);
             break;
@@ -171,15 +169,15 @@ void Game::DrawTile(Tile tile, int x, int y) {
             tile_sprite.setTexture(tile_texture);
             break;
         } 
+    }
 
-        // set position for tile
-        tile_sprite.setPosition(sf::Vector2f(
-        (x) * kTileResolution, 
-        (y) * kTileResolution
-        ));
+    // set position for tile
+    tile_sprite.setPosition(sf::Vector2f(
+    (x) * kTileResolution, 
+    (y) * kTileResolution
+    ));
 
-        tile.type_changed = false;
-    }   
+    tile.type_changed = false; 
 
     // draw tile
     window.draw(tile_sprite);
@@ -206,7 +204,7 @@ void Game::HandleCamera() {
     if (mouse_wheel_delta){
         if ((view_zoom_factor > 1.f || mouse_wheel_delta < 0) && 
             (view_zoom_factor < 10.f || mouse_wheel_delta > 0)) {
-            view.zoom(1 + (mouse_wheel_delta * 250) * delta_time.asSeconds());
+            view.zoom(1 + (mouse_wheel_delta * 350) * delta_time.asSeconds());
         }
     }
     view_zoom_factor =  window.getSize().x / view.getSize().x;
