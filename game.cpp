@@ -19,12 +19,11 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
 
     tile_texture(sf::Vector2u(8, 8)),
 
-    stone_texture("sprites/stone.png"),
-    stone_floor_texture("sprites/stone_floor.png"),
-    crate_texture("sprites/crate.png"),
-    gem_texture("sprites/gem.png"),
-
-    empty_tile_texture("sprites/empty_tile.png"),
+    //Tile preview doesn't work without this for some reason
+    //Please fix
+    stone_texture("sprites/tiles/stone.png"),
+     
+    empty_tile_texture("sprites/tiles/empty.png"),
 
     tile_sprite(tile_texture),
     tile_preview_sprite(stone_texture),
@@ -36,6 +35,8 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     tile_place_type(1)
         
 {   
+
+    SetTextures();
 
     my_circle.setFillColor(sf::Color::Blue);
     my_circle.setOrigin({3.f, 3.f});
@@ -136,6 +137,34 @@ void Game::CheckEvents() {
 }
 
 
+void Game::SetTextures() {
+    if (!stone_texture.loadFromFile("sprites/tiles/stone.png")) {
+        std::cerr << "Error loading stone texture\n";
+    }
+    if (!stone_floor_texture.loadFromFile("sprites/tiles/stone_floor.png")) {
+        std::cerr << "Error loading stone floor texture\n";
+    }
+    if (!crate_texture.loadFromFile("sprites/tiles/crate.png")) {
+        std::cerr << "Error loading crate texture\n";
+    }
+    if (!gem_texture.loadFromFile("sprites/tiles/gem.png")) {
+        std::cerr << "Error loading gem texture\n";
+    }
+    if (!gold_texture.loadFromFile("sprites/tiles/gold.png")) {
+        std::cerr << "Error loading gem texture\n";
+    }
+    if (!trap_texture.loadFromFile("sprites/tiles/trap.png")) {
+        std::cerr << "Error loading gem texture\n";
+    }
+    if (!pebbles_texture.loadFromFile("sprites/tiles/pebbles.png")) {
+        std::cerr << "Error loading gem texture\n";
+    }
+    if (!empty_tile_texture.loadFromFile("sprites/tiles/empty.png")) {
+        std::cerr << "Error loading empty tile texture\n";
+    }
+}
+
+
 void Game::DrawGrid(Grid grid) {
     Tile tile;
     // only iterates over tiles within view bounds to improve performance
@@ -154,28 +183,8 @@ void Game::DrawGrid(Grid grid) {
 
 void Game::DrawTile(Tile tile, int x, int y) {
     if (tile.type_changed){
-        switch (tile.GetType()){
-        case 1:
-            tile_sprite.setTexture(stone_texture);
-            break;
-
-        case 2:
-            tile_sprite.setTexture(stone_floor_texture);
-            break;
-
-        case 3:
-            tile_sprite.setTexture(crate_texture);
-            break;
-        case 4:
-            tile_sprite.setTexture(gem_texture);
-            break;
-        
-        default:
-            tile_sprite.setTexture(tile_texture);
-            break;
-        } 
+        SetTileSpriteTexture(tile_sprite, tile.GetType());
     }
-
     // set position for tile
     tile_sprite.setPosition(sf::Vector2f(
     (x) * kTileResolution, 
@@ -246,28 +255,40 @@ void Game::NextTileType() {
     if (tile_place_type >= kTileTypeCount) {
             tile_place_type = 1;
         }
-    switch (tile_place_type)
+    SetTileSpriteTexture(tile_preview_sprite, tile_place_type);
+    return;
+}
+
+
+void Game::SetTileSpriteTexture(sf::Sprite& sprite, int tile_type) {
+    switch (tile_type)
     {
     case 1:
-        tile_preview_sprite.setTexture(stone_texture);
+        sprite.setTexture(stone_texture);
         break;
-
     case 2:
-        tile_preview_sprite.setTexture(stone_floor_texture);
+        sprite.setTexture(stone_floor_texture);
         break;
-
     case 3:
-        tile_preview_sprite.setTexture(crate_texture);
+        sprite.setTexture(gem_texture);
         break;
     case 4:
-        tile_preview_sprite.setTexture(gem_texture);
+        sprite.setTexture(gold_texture);
+        break;
+    case 5:
+        sprite.setTexture(trap_texture);
+        break;
+    case 6:
+        sprite.setTexture(pebbles_texture);
+        break;
+    case 7:
+        sprite.setTexture(crate_texture);
         break;
     
     default:
-        tile_preview_sprite.setTexture(empty_tile_texture);
+        sprite.setTexture(empty_tile_texture);
         break;
     }
-    
 }
 
 

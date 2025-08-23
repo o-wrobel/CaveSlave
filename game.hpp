@@ -11,7 +11,7 @@ class Game {
         const sf::Vector2u kWindowSize; 
         const sf::Vector2u kWindowCenter;
         const int kTileResolution;
-        static const int kTileTypeCount = 5;
+        static const int kTileTypeCount = 8;
         sf::RenderWindow window;
         sf::View view;
 
@@ -33,6 +33,9 @@ class Game {
         sf::Texture stone_floor_texture;
         sf::Texture crate_texture;
         sf::Texture gem_texture;
+        sf::Texture gold_texture;
+        sf::Texture trap_texture;
+        sf::Texture pebbles_texture; 
         sf::Texture empty_tile_texture;
 
         sf::Texture tile_texture;
@@ -68,12 +71,14 @@ class Game {
         // Private methods
 
         void CheckEvents();
+        void SetTextures();
         void DrawGrid(Grid grid);
         void DrawTile(Tile tile, int x, int y);
         void SetInputVariables();
         void HandleCamera();
         void HandleTilePlacing();
         void NextTileType();
+        void SetTileSpriteTexture(sf::Sprite& sprite, int tile_type);
         void SetViewVariables();
 
     public:

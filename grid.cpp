@@ -8,7 +8,7 @@
 Grid::Grid(int x, int y)
     : size(x, y)
     {
-    
+
     tile_grid.resize(size.y, std::vector<Tile>(size.x, Tile()));
 
     Build_Grid();
@@ -81,10 +81,17 @@ Tile Grid::GetTile(int x, int y) const {
 
 
 int Grid::GetTypeID(std::string type_name) {
-    if (type_name == "stone") return 1;
-    if (type_name == "stone_floor") return 2;
-    if (type_name == "crate") return 3;
-    if (type_name == "gem") return 4;
-    return 0;
-    
+    return tile_names.at(type_name);
 }
+
+const std::unordered_map<std::string, int> Grid::tile_names = {
+    {"null", 0},
+    {"stone", 1},
+    {"stone_floor", 2},
+    {"gem", 3},
+    {"gold", 4},
+    {"trap", 5},
+    {"pebbles", 6},
+    {"crate", 7}
+};
+

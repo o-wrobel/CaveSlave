@@ -2,6 +2,7 @@
 #define GRID_HPP
 
 #include <iostream>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 
 #include "tile.hpp"
@@ -12,6 +13,7 @@ class Grid {
         std::vector<std::vector<Tile>> tile_grid;
 
         void Build_Grid();
+        static const std::unordered_map<std::string, int> tile_names;
 
     public:
         Grid(int x, int y);
