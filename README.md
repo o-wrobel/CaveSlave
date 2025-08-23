@@ -2,8 +2,12 @@
 
 WASD to move the camera around
 
-Up and down arrow keys to zoom in and out
+E and Q to respectively zoom in and out
 
 Left mouse button to place a tile
 
-Right mouse button to cycle between tiles
+Right mouse button to delete a tile
+
+Spacebar to cycle between tiles to place
+
+Esc to exit

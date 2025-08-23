@@ -14,6 +14,7 @@ class Game {
         const int kTileTypeCount = 4;
         sf::RenderWindow window;
         sf::View view;
+
         sf::Clock clock;
         sf::Time delta_time;
 
@@ -44,29 +45,35 @@ class Game {
         sf::Vector2i mouse_grid_position;
 
         int tile_place_type;
+        sf::Vector2i last_tile_placed_position;
         sf::CircleShape my_circle;
 
         // Input state variables
 
-        bool up_pressed;
-        bool down_pressed;
-        bool left_pressed;
-        bool right_pressed;
+        bool input_up_held;
+        bool input_down_held;
+        bool input_left_held;
+        bool input_right_held;
 
-        bool forward_pressed;
-        bool backward_pressed;
+        bool spacebar_pressed;
 
-        bool lmb_clicked;
-        bool rmb_clicked;
+        bool input_forward_held;
+        bool input_backward_held;
+
+        bool lmb_pressed;
+        bool rmb_pressed;
+        bool lmb_held;
+        bool rmb_held;
 
         // Private methods
 
+        void CheckEvents();
         void DrawGrid(Grid grid);
         void DrawTile(Grid grid, int x, int y);
-        void DrawTilePreview(int tile_place_type);
-        void HandleInput();
+        void SetInputVariables();
         void HandleCamera();
         void HandleTilePlacing();
+        void NextTileType();
         void SetViewVariables();
 
     public:

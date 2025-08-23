@@ -31,7 +31,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     game_grid(grid_size.x, grid_size.y),
 
     my_circle(6),
-    tile_place_type(0)
+    tile_place_type(1)
         
 {   
 
@@ -53,29 +53,15 @@ void Game::GameLoop() {
     // run the program as long as the window is open
     while (window.isOpen())
     {        
+        delta_time = clock.restart();
         my_circle.setFillColor(sf::Color::Blue);
 
         // check all the window's events that were triggered since the last iteration of the loop
-        while (const std::optional event = window.pollEvent())
-        {
-            // "close requested" event: we close the window
-            if (event->is<sf::Event::Closed>()){
-                window.close();
-            }
-            
-            //check if mouse buttons are pressed (for the first time in a while)
-            //Any mouse inputs need to be HERE, not outside the event polling loop
-            if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
-                rmb_clicked = mouseButtonPressed->button == sf::Mouse::Button::Right;
-                lmb_clicked = mouseButtonPressed->button == sf::Mouse::Button::Left;
-                HandleTilePlacing();
-            }
-            
-        }
         
-        delta_time = clock.restart();
+        CheckEvents();
+        SetInputVariables();
+        HandleTilePlacing();
 
-        HandleInput();
         HandleCamera();
         
         // clear the window with black color
@@ -92,11 +78,57 @@ void Game::GameLoop() {
         window.setView(window.getDefaultView());
 
         window.draw(my_circle);
-        DrawTilePreview(tile_place_type);
+        window.draw(tile_preview_sprite);
 
         // end the current frame
         window.display();
 
+    }
+}
+
+
+void Game::CheckEvents() {
+    while (const std::optional event = window.pollEvent())
+    {
+        // "close requested" event: we close the window
+        if (event->is<sf::Event::Closed>()){
+            window.close();
+        }
+        
+        
+        //Check if mouse moved and calculate mouse positions
+        if (const auto* mouse_moved = event->getIf<sf::Event::MouseMoved>()){
+            mouse_position = {mouse_moved->position.x, mouse_moved->position.y};
+            mouse_world_position = window.mapPixelToCoords(mouse_position, view);
+            mouse_grid_position = sf::Vector2i(
+                mouse_world_position.x / kTileResolution,
+                mouse_world_position.y / kTileResolution
+            );
+            
+        }
+
+        //check if mouse buttons are pressed (for the first time in a while)
+        //Any mouse inputs need to be HERE, not outside the event polling loop
+        rmb_pressed = false;
+        lmb_pressed = false;
+        if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
+            rmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Right;
+            lmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Left;
+            
+        }
+
+        if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+            if (keyPressed->code == sf::Keyboard::Key::Escape){
+                window.close();
+            }
+
+            if (keyPressed->code == sf::Keyboard::Key::Space){
+                spacebar_pressed = true;
+                NextTileType();
+            }
+            
+        }
+        
     }
 }
 
@@ -153,68 +185,36 @@ void Game::DrawTile(Grid grid, int x, int y) {
 }
 
 
-void Game::DrawTilePreview(int tile_place_type){
-
-    if (true){ // Check if tile_place_type has changed
-        switch (tile_place_type)
-        {
-        case 1:
-            tile_preview_sprite.setTexture(stone_texture);
-            break;
-
-        case 2:
-            tile_preview_sprite.setTexture(stone_floor_texture);
-            break;
-
-        case 3:
-            tile_preview_sprite.setTexture(crate_texture);
-            break;
-        
-        default:
-            tile_preview_sprite.setTexture(empty_tile_texture);
-            break;
-        }
-    }
-
-    // draw tile
-    window.draw(tile_preview_sprite);
-}
-
-void Game::HandleInput() { //This goes in the event polling loop
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-        window.close();
-    }
-
+void Game::SetInputVariables() {
     //movement controls
-    up_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
-    down_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S);
-    left_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
-    right_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
+    input_up_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W);
+    input_down_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S);
+    input_left_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
+    input_right_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 
    //camera controls
-    forward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up);
-    backward_pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down);
+    input_forward_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E);
+    input_backward_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q);
 
-    mouse_position = sf::Mouse::getPosition(window);
-    mouse_world_position = window.mapPixelToCoords(mouse_position, view);
-    mouse_grid_position = sf::Vector2i(
-        mouse_world_position.x / kTileResolution,
-        mouse_world_position.y / kTileResolution
-    );
+    //mouse controls
+    lmb_held = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+    rmb_held = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
+
+    return;
     
 }
 
 
 void Game::HandleCamera() {
 
-    view.zoom( 1 + ((backward_pressed - forward_pressed ) * 2) * delta_time.asSeconds());
+    view.zoom( 1 + ((input_backward_held - input_forward_held ) * 2) * delta_time.asSeconds());
     view_zoom_factor =  window.getSize().x / view.getSize().x;
 
     int camera_speed =  1 * view.getSize().x;
 
     view.move(sf::Vector2f(
-        ((right_pressed - left_pressed) * camera_speed) * delta_time.asSeconds(), 
-        ((down_pressed - up_pressed) * camera_speed) * delta_time.asSeconds()
+        ((input_right_held - input_left_held) * camera_speed) * delta_time.asSeconds(), 
+        ((input_down_held - input_up_held) * camera_speed) * delta_time.asSeconds()
     ));
     
 }
@@ -222,25 +222,50 @@ void Game::HandleCamera() {
 
 void Game::HandleTilePlacing() {
     
-    if (lmb_clicked) {
-
-        game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, tile_place_type);
+    if (lmb_held) {
         my_circle.setFillColor(sf::Color::Green);
-
+        if (mouse_grid_position != last_tile_placed_position) {
+            game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, tile_place_type);
+            last_tile_placed_position = mouse_grid_position;
+        }
         return;
     }
-    if (rmb_clicked) {
-        tile_place_type++;
-        if (tile_place_type >= kTileTypeCount) {
-            tile_place_type = 0;
-        }
+    if (rmb_held) {
         my_circle.setFillColor(sf::Color::Red);
-
+        if (mouse_grid_position != last_tile_placed_position) {
+            game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "null");
+            last_tile_placed_position = mouse_grid_position;
+        }
         return;
+    }
+    return;
+}
+
+
+void Game::NextTileType() {
+    tile_place_type++;
+    if (tile_place_type >= kTileTypeCount) {
+            tile_place_type = 1;
+        }
+    switch (tile_place_type)
+    {
+    case 1:
+        tile_preview_sprite.setTexture(stone_texture);
+        break;
+
+    case 2:
+        tile_preview_sprite.setTexture(stone_floor_texture);
+        break;
+
+    case 3:
+        tile_preview_sprite.setTexture(crate_texture);
+        break;
+    
+    default:
+        tile_preview_sprite.setTexture(empty_tile_texture);
+        break;
     }
     
-    rmb_clicked = lmb_clicked = false;
-
 }
 
 
