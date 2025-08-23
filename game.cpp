@@ -22,6 +22,8 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     stone_texture("sprites/stone.png"),
     stone_floor_texture("sprites/stone_floor.png"),
     crate_texture("sprites/crate.png"),
+    gem_texture("sprites/gem.png"),
+
     empty_tile_texture("sprites/empty_tile.png"),
 
     tile_sprite(tile_texture),
@@ -30,7 +32,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     grid_size(64, 64),
     game_grid(grid_size.x, grid_size.y),
 
-    my_circle(6),
+    my_circle(6), 
     tile_place_type(1)
         
 {   
@@ -164,6 +166,9 @@ void Game::DrawTile(Tile tile, int x, int y) {
         case 3:
             tile_sprite.setTexture(crate_texture);
             break;
+        case 4:
+            tile_sprite.setTexture(gem_texture);
+            break;
         
         default:
             tile_sprite.setTexture(tile_texture);
@@ -223,18 +228,13 @@ void Game::HandleTilePlacing() {
     
     if (lmb_held) {
         my_circle.setFillColor(sf::Color::Green);
-        if (mouse_grid_position != last_tile_placed_position) {
-            game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, tile_place_type);
-            last_tile_placed_position = mouse_grid_position;
-        }
+        game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, tile_place_type);
+        last_tile_placed_position = mouse_grid_position;
         return;
     }
     if (rmb_held) {
         my_circle.setFillColor(sf::Color::Red);
-        if (mouse_grid_position != last_tile_placed_position) {
-            game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "null");
-            last_tile_placed_position = mouse_grid_position;
-        }
+        game_grid.SetTile(mouse_grid_position.x, mouse_grid_position.y, "null");
         return;
     }
     return;
@@ -258,6 +258,9 @@ void Game::NextTileType() {
 
     case 3:
         tile_preview_sprite.setTexture(crate_texture);
+        break;
+    case 4:
+        tile_preview_sprite.setTexture(gem_texture);
         break;
     
     default:

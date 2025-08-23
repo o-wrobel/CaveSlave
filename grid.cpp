@@ -84,6 +84,7 @@ int Grid::GetTypeID(std::string type_name) {
     if (type_name == "stone") return 1;
     if (type_name == "stone_floor") return 2;
     if (type_name == "crate") return 3;
+    if (type_name == "gem") return 4;
     return 0;
     
 }

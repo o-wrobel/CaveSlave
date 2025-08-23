@@ -11,7 +11,7 @@ class Game {
         const sf::Vector2u kWindowSize; 
         const sf::Vector2u kWindowCenter;
         const int kTileResolution;
-        const int kTileTypeCount = 4;
+        static const int kTileTypeCount = 5;
         sf::RenderWindow window;
         sf::View view;
 
@@ -32,6 +32,7 @@ class Game {
         sf::Texture stone_texture;
         sf::Texture stone_floor_texture;
         sf::Texture crate_texture;
+        sf::Texture gem_texture;
         sf::Texture empty_tile_texture;
 
         sf::Texture tile_texture;

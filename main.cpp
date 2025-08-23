@@ -7,4 +7,5 @@ int main()
     Game Game(640, 480); // Create an instance of the Game class
     Game.GameLoop(); // Call the run method with specified window size
     
+    return 0;
 }
