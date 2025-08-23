@@ -57,7 +57,7 @@ void Game::GameLoop() {
         my_circle.setFillColor(sf::Color::Blue);
 
         // check all the window's events that were triggered since the last iteration of the loop
-        
+        mouse_wheel_delta = 0.f;
         CheckEvents();
         SetInputVariables();
         HandleTilePlacing();
@@ -95,7 +95,6 @@ void Game::CheckEvents() {
             window.close();
         }
         
-        
         //Check if mouse moved and calculate mouse positions
         if (const auto* mouse_moved = event->getIf<sf::Event::MouseMoved>()){
             mouse_position = {mouse_moved->position.x, mouse_moved->position.y};
@@ -104,7 +103,6 @@ void Game::CheckEvents() {
                 mouse_world_position.x / kTileResolution,
                 mouse_world_position.y / kTileResolution
             );
-            
         }
 
         //check if mouse buttons are pressed (for the first time in a while)
@@ -115,6 +113,11 @@ void Game::CheckEvents() {
             rmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Right;
             lmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Left;
             
+        }
+
+        //check mouse wheel movement
+        if (const auto* mouseWheelMoved = event->getIf<sf::Event::MouseWheelScrolled>()){
+            mouse_wheel_delta = -1 * mouseWheelMoved->delta;
         }
 
         if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
@@ -190,10 +193,6 @@ void Game::SetInputVariables() {
     input_left_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
     input_right_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 
-   //camera controls
-    input_forward_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::E);
-    input_backward_held = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q);
-
     //mouse controls
     lmb_held = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
     rmb_held = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
@@ -204,8 +203,12 @@ void Game::SetInputVariables() {
 
 
 void Game::HandleCamera() {
-
-    view.zoom( 1 + ((input_backward_held - input_forward_held ) * 2) * delta_time.asSeconds());
+    if (mouse_wheel_delta){
+        if ((view_zoom_factor > 1.f || mouse_wheel_delta < 0) && 
+            (view_zoom_factor < 10.f || mouse_wheel_delta > 0)) {
+            view.zoom(1 + (mouse_wheel_delta * 250) * delta_time.asSeconds());
+        }
+    }
     view_zoom_factor =  window.getSize().x / view.getSize().x;
 
     int camera_speed =  1 * view.getSize().x;

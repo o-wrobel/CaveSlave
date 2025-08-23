@@ -57,13 +57,12 @@ class Game {
 
         bool spacebar_pressed;
 
-        bool input_forward_held;
-        bool input_backward_held;
-
         bool lmb_pressed;
         bool rmb_pressed;
         bool lmb_held;
         bool rmb_held;
+
+        float mouse_wheel_delta;
 
         // Private methods
 

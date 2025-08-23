@@ -2,7 +2,7 @@
 
 WASD to move the camera around
 
-E and Q to respectively zoom in and out
+Mouse wheel to zoom in and out
 
 Left mouse button to place a tile
 
