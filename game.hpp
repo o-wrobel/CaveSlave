@@ -28,17 +28,9 @@ class Game {
 
         sf::Vector2i grid_size;
         Grid game_grid;
-        
-        sf::Texture stone_texture;
-        sf::Texture stone_floor_texture;
-        sf::Texture crate_texture;
-        sf::Texture gem_texture;
-        sf::Texture gold_texture;
-        sf::Texture trap_texture;
-        sf::Texture pebbles_texture; 
-        sf::Texture empty_tile_texture;
 
         sf::Texture tile_texture;
+        sf::Texture tile_spritesheet;
 
         sf::Sprite tile_sprite;
         sf::FloatRect tile_preview_bounds;
@@ -79,6 +71,7 @@ class Game {
         void HandleTilePlacing();
         void NextTileType();
         void SetTileSpriteTexture(sf::Sprite& sprite, int tile_type);
+        void GetTextureFromSpritesheet(int index_x, int index_y, sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
         void SetViewVariables();
 
     public:

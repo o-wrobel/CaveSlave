@@ -18,15 +18,10 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     clock(),
 
     tile_texture(sf::Vector2u(8, 8)),
-
-    //Tile preview doesn't work without this for some reason
-    //Please fix
-    stone_texture("sprites/tiles/stone.png"),
-     
-    empty_tile_texture("sprites/tiles/empty.png"),
+    tile_spritesheet("sprites/tiles/tiles.png"),
 
     tile_sprite(tile_texture),
-    tile_preview_sprite(stone_texture),
+    tile_preview_sprite(tile_texture),
 
     grid_size(64, 64),
     game_grid(grid_size.x, grid_size.y),
@@ -36,14 +31,13 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
         
 {   
 
-    SetTextures();
-
     my_circle.setFillColor(sf::Color::Blue);
-    my_circle.setOrigin({3.f, 3.f});
+    my_circle.setOrigin({my_circle.getRadius(), my_circle.getRadius()});
     my_circle.setPosition({kWindowSize.x * 0.02f, kWindowSize.y * 0.02f});
 
     // set position for tile
-    tile_preview_sprite.setOrigin({4.f, 4.f});
+    SetTileSpriteTexture(tile_preview_sprite, tile_place_type);
+    tile_preview_sprite.setOrigin({kTileResolution/2.f, kTileResolution/2.f});
     tile_preview_sprite.setPosition({kWindowSize.x * 0.92f, kWindowSize.y * 0.10f});
     tile_preview_sprite.setColor(sf::Color(255, 255, 255, 200));
 
@@ -133,34 +127,6 @@ void Game::CheckEvents() {
             
         }
         
-    }
-}
-
-
-void Game::SetTextures() {
-    if (!stone_texture.loadFromFile("sprites/tiles/stone.png")) {
-        std::cerr << "Error loading stone texture\n";
-    }
-    if (!stone_floor_texture.loadFromFile("sprites/tiles/stone_floor.png")) {
-        std::cerr << "Error loading stone floor texture\n";
-    }
-    if (!crate_texture.loadFromFile("sprites/tiles/crate.png")) {
-        std::cerr << "Error loading crate texture\n";
-    }
-    if (!gem_texture.loadFromFile("sprites/tiles/gem.png")) {
-        std::cerr << "Error loading gem texture\n";
-    }
-    if (!gold_texture.loadFromFile("sprites/tiles/gold.png")) {
-        std::cerr << "Error loading gem texture\n";
-    }
-    if (!trap_texture.loadFromFile("sprites/tiles/trap.png")) {
-        std::cerr << "Error loading gem texture\n";
-    }
-    if (!pebbles_texture.loadFromFile("sprites/tiles/pebbles.png")) {
-        std::cerr << "Error loading gem texture\n";
-    }
-    if (!empty_tile_texture.loadFromFile("sprites/tiles/empty.png")) {
-        std::cerr << "Error loading empty tile texture\n";
     }
 }
 
@@ -263,32 +229,39 @@ void Game::NextTileType() {
 void Game::SetTileSpriteTexture(sf::Sprite& sprite, int tile_type) {
     switch (tile_type)
     {
-    case 1:
-        sprite.setTexture(stone_texture);
+    case 1: //stone
+        GetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);
         break;
-    case 2:
-        sprite.setTexture(stone_floor_texture);
+    case 2: //stone_floor
+        GetTextureFromSpritesheet(1, 0, tile_spritesheet, kTileResolution, sprite);
         break;
-    case 3:
-        sprite.setTexture(gem_texture);
+    case 3: //gem
+        GetTextureFromSpritesheet(2, 0, tile_spritesheet, kTileResolution, sprite);
         break;
-    case 4:
-        sprite.setTexture(gold_texture);
+    case 4: //gold
+        GetTextureFromSpritesheet(3, 0, tile_spritesheet, kTileResolution, sprite);
         break;
-    case 5:
-        sprite.setTexture(trap_texture);
+    case 5: //trap
+        GetTextureFromSpritesheet(0, 1, tile_spritesheet, kTileResolution, sprite);
         break;
-    case 6:
-        sprite.setTexture(pebbles_texture);
+    case 6: //pebbles
+        GetTextureFromSpritesheet(2, 1, tile_spritesheet, kTileResolution, sprite);
         break;
-    case 7:
-        sprite.setTexture(crate_texture);
+    case 7: //crate
+        GetTextureFromSpritesheet(1, 1, tile_spritesheet, kTileResolution, sprite);
         break;
     
     default:
-        sprite.setTexture(empty_tile_texture);
+        sprite.setTexture(tile_texture);
         break;
     }
+}
+
+
+void Game::GetTextureFromSpritesheet(int index_x, int index_y, sf::Texture& spritesheet, int resolution, sf::Sprite& sprite) {
+
+    sprite.setTexture(spritesheet);
+    sprite.setTextureRect(sf::IntRect({index_x * resolution, index_y * resolution}, {resolution, resolution}));
 }
 
 
