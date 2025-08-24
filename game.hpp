@@ -22,6 +22,7 @@ class Game {
         sf::Vector2f view_center;
         sf::Vector2f view_size;
         float view_zoom_factor;
+        float camera_speed;
 
         sf::Vector2i view_start_position;
         sf::Vector2i view_end_position;

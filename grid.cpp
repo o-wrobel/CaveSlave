@@ -1,5 +1,4 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
 
 #include "game.hpp"
 #include "grid.hpp"

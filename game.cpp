@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include <map>
+#include <algorithm>
 
 #include "game.hpp"
 #include "grid.hpp"
@@ -12,7 +13,9 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     kWindowCenter({kWindowSize.x / 2, kWindowSize.y / 2}),
 
     kTileResolution(8),
-    view(sf::FloatRect({0, 0}, {kWindowSize.x * 0.5f, kWindowSize.y * 0.5f})), 
+    view_zoom_factor(2.f),
+    view(sf::FloatRect({0, 0}, 
+        {kWindowSize.x * 1.f, kWindowSize.y * 1.f})), 
     
     window(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "project"),
     clock(),
@@ -182,14 +185,12 @@ void Game::SetInputVariables() {
 
 void Game::HandleCamera() {
     if (mouse_wheel_delta){
-        if ((view_zoom_factor > 1.f || mouse_wheel_delta < 0) && 
-            (view_zoom_factor < 10.f || mouse_wheel_delta > 0)) {
-            view.zoom(1 + (mouse_wheel_delta * 350) * delta_time.asSeconds());
-        }
+            view_zoom_factor -= mouse_wheel_delta * 0.5f;
+            view_zoom_factor = std::clamp(view_zoom_factor, 0.8f, 7.0f);
     }
-    view_zoom_factor =  window.getSize().x / view.getSize().x;
+    view.setSize(sf::Vector2f(kWindowSize.x / pow(2, view_zoom_factor - 1), kWindowSize.y / pow(2, view_zoom_factor - 1)));
 
-    int camera_speed =  1 * view.getSize().x;
+    camera_speed =  1 * view.getSize().x;
 
     view.move(sf::Vector2f(
         ((input_right_held - input_left_held) * camera_speed) * delta_time.asSeconds(), 
