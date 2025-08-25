@@ -12,30 +12,30 @@ private:
     Game& game_;
     sf::Window& window_;
 
-    // bool up_held;
-    // bool down_held;
-    // bool left_held;
-    // bool right_held;
+    bool up_held_;
+    bool down_held_;
+    bool left_held_;
+    bool right_held_;
+    
+    bool spacebar_pressed_;
 
-    bool spacebar_pressed;
+    bool lmb_held_;
+    bool rmb_held_;
 
-    bool lmb_held;
-    bool rmb_held;
+    float mouse_wheel_delta_;
 
-    float mouse_wheel_delta;
-
-    sf::Vector2i mouse_position;
+    sf::Vector2i mouse_position_;
 
 public:
-    bool up_held;
-    bool down_held;
-    bool left_held;
-    bool right_held;
     
-    InputHandler();
+
+    InputHandler(); // Default constructor // neccessary for some reason
     InputHandler(Game& game, sf::Window& window);
     void CheckInput();
     void CheckEventInput(const std::optional<sf::Event> event);
+    void ExecuteInputsCamera();
+    void ExecuteInputsGame();
+
 };
 
 #endif
