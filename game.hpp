@@ -13,8 +13,10 @@ class Game {
         const sf::Vector2u kWindowCenter;
         const int kTileResolution;
         static const int kTileTypeCount = 8;
+
         sf::RenderWindow window_;
         sf::View view_;
+
         Camera camera_;
         InputHandler input_handler_;
 
@@ -32,6 +34,7 @@ class Game {
         sf::Sprite tile_sprite_;
         sf::FloatRect tile_preview_bounds_;
         sf::Sprite tile_preview_sprite_;
+        sf::RectangleShape black_square;
 
         sf::Vector2f mouse_world_position_;
         sf::Vector2i mouse_grid_position_;
@@ -49,7 +52,7 @@ class Game {
         void DrawTile(Tile& tile, int x, int y);
         void SetInputVariables();
         void PlaceTile(sf::Vector2i mouse_position, bool mouse_button_held);
-        void NextTileType();
+        void NextTilePlaceType();
         void SetTileSpriteTexture(sf::Sprite& sprite, int tile_type);
         void GetTextureFromSpritesheet(int index_x, int index_y, sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
 

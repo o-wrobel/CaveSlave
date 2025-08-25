@@ -60,7 +60,7 @@ void InputHandler::ExecuteInputsCamera() {
 
 
 void InputHandler::ExecuteInputsGame() {
-    if(spacebar_pressed_){game_.NextTileType();} 
+    if(spacebar_pressed_){game_.NextTilePlaceType();} 
     spacebar_pressed_ = false;
 
     if (lmb_held_) {

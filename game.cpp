@@ -22,6 +22,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
 
     tile_sprite_(tile_texture_),
     tile_preview_sprite_(tile_texture_),
+    black_square(sf::Vector2f(kTileResolution, kTileResolution)),
 
     grid_size_(64, 64),
     game_grid_(grid_size_.x, grid_size_.y),
@@ -41,8 +42,14 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     tile_preview_sprite_.setOrigin({kTileResolution/2.f, kTileResolution/2.f});
     tile_preview_sprite_.setPosition({kWindowSize.x * 0.92f, kWindowSize.y * 0.10f});
     tile_preview_sprite_.setColor(sf::Color(255, 255, 255, 200));
-
     tile_preview_sprite_.setScale(sf::Vector2f(6.f, 6.f));
+
+
+    black_square.setFillColor(sf::Color(0, 0, 0, 200));
+    black_square.setOrigin({kTileResolution/2.f, kTileResolution/2.f});
+    black_square.setPosition({kWindowSize.x * 0.92f, kWindowSize.y * 0.10f});
+    black_square.setScale(sf::Vector2f(6.f, 6.f));
+
 
 }
 
@@ -75,6 +82,7 @@ void Game::GameLoop() {
         window_.setView(window_.getDefaultView());
 
         window_.draw(my_circle_);
+        window_.draw(black_square);
         window_.draw(tile_preview_sprite_);
 
         // end the current frame
@@ -124,13 +132,10 @@ void Game::DrawTile(Tile& tile, int x, int y) {
     if (tile.type_changed){
         SetTileSpriteTexture(tile_sprite_, tile.GetType());
     }
-    // set position for tile
-    tile_sprite_.setPosition(sf::Vector2f(
-    (x) * kTileResolution, 
-    (y) * kTileResolution
-    ));
-
     tile.type_changed = false; 
+
+    // set position for tile
+    tile_sprite_.setPosition({x * kTileResolution * 1.f, y * kTileResolution * 1.f});
 
     // draw tile
     window_.draw(tile_sprite_);
@@ -158,7 +163,7 @@ void Game::PlaceTile(sf::Vector2i mouse_position, bool lmb_held) {
 }
 
 
-void Game::NextTileType() {
+void Game::NextTilePlaceType() {
     tile_place_type_++;
     if (tile_place_type_ >= kTileTypeCount) {
             tile_place_type_ = 1;
