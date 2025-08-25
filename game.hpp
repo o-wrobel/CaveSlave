@@ -1,10 +1,10 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include <iostream>
 #include <SFML/Graphics.hpp>
 
 #include "grid.hpp"
+#include "camera.hpp"
 
 class Game {
     private:
@@ -14,15 +14,10 @@ class Game {
         static const int kTileTypeCount = 8;
         sf::RenderWindow window;
         sf::View view;
+        Camera camera;
 
         sf::Clock clock;
         sf::Time delta_time;
-
-        sf::FloatRect view_bounds;
-        sf::Vector2f view_center;
-        sf::Vector2f view_size;
-        float view_zoom_factor;
-        float camera_speed;
 
         sf::Vector2i view_start_position;
         sf::Vector2i view_end_position;
@@ -54,8 +49,6 @@ class Game {
 
         bool spacebar_pressed;
 
-        bool lmb_pressed;
-        bool rmb_pressed;
         bool lmb_held;
         bool rmb_held;
 
@@ -68,12 +61,10 @@ class Game {
         void DrawGrid(Grid grid);
         void DrawTile(Tile tile, int x, int y);
         void SetInputVariables();
-        void HandleCamera();
         void HandleTilePlacing();
         void NextTileType();
         void SetTileSpriteTexture(sf::Sprite& sprite, int tile_type);
         void GetTextureFromSpritesheet(int index_x, int index_y, sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
-        void SetViewVariables();
 
     public:
 

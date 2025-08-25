@@ -1,21 +1,16 @@
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <cmath>
-#include <map>
-#include <algorithm>
-
 #include "game.hpp"
 #include "grid.hpp"
 #include "tile.hpp"
+#include "camera.hpp"
+
+#include <SFML/Graphics.hpp>
 
 Game::Game(unsigned int window_size_x, unsigned int window_size_y)
   : kWindowSize({window_size_x, window_size_y}),
     kWindowCenter({kWindowSize.x / 2, kWindowSize.y / 2}),
 
     kTileResolution(8),
-    view_zoom_factor(2.f),
-    view(sf::FloatRect({0, 0}, 
-        {kWindowSize.x * 1.f, kWindowSize.y * 1.f})), 
+    camera(window),
     
     window(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "project"),
     clock(),
@@ -32,8 +27,8 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     my_circle(6), 
     tile_place_type(1)
         
-{   
-
+{    
+    // set position for circle
     my_circle.setFillColor(sf::Color::Blue);
     my_circle.setOrigin({my_circle.getRadius(), my_circle.getRadius()});
     my_circle.setPosition({kWindowSize.x * 0.02f, kWindowSize.y * 0.02f});
@@ -60,16 +55,21 @@ void Game::GameLoop() {
         mouse_wheel_delta = 0.f;
         CheckEvents();
         SetInputVariables();
+
+        bool inputs[4] = {input_up_held, input_down_held, input_left_held, input_right_held};
+        camera.GiveInput(inputs, mouse_wheel_delta, delta_time); 
+
         HandleTilePlacing();
 
-        HandleCamera();
+        camera.HandleGivenInput();
         
         // clear the window with black color
         window.clear(sf::Color::Black);
 
         //view stuff
+        view = camera.GetView();
         window.setView(view);
-        SetViewVariables();
+        camera.SetViewVariables(kTileResolution);
 
         //Draw game world objects
         DrawGrid(game_grid);
@@ -106,12 +106,12 @@ void Game::CheckEvents() {
         }
 
         //check if mouse buttons are pressed (for the first time in a while)
-        rmb_pressed = false;
-        lmb_pressed = false;
-        if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
-            rmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Right;
-            lmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Left;
-        }
+        // rmb_pressed = false;
+        // lmb_pressed = false;
+        // if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
+        //     rmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Right;
+        //     lmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Left;
+        // }
 
         //check mouse wheel movement
         if (const auto* mouseWheelMoved = event->getIf<sf::Event::MouseWheelScrolled>()){
@@ -138,6 +138,8 @@ void Game::DrawGrid(Grid grid) {
     Tile tile;
     // only iterates over tiles within view bounds to improve performance
     // thanks windsurf
+    sf::Vector2i view_start_position = camera.view_start_position_;
+    sf::Vector2i view_end_position = camera.view_end_position_;
     for (int row = view_start_position.y; row < view_end_position.y; row++) {
         for (int col = view_start_position.x; col < view_end_position.x; col++) {
             tile = grid.GetTile(col, row);
@@ -179,23 +181,6 @@ void Game::SetInputVariables() {
     rmb_held = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
 
     return;
-    
-}
-
-
-void Game::HandleCamera() {
-    if (mouse_wheel_delta){
-            view_zoom_factor -= mouse_wheel_delta * 0.5f;
-            view_zoom_factor = std::clamp(view_zoom_factor, 0.8f, 7.0f);
-    }
-    view.setSize(sf::Vector2f(kWindowSize.x / pow(2, view_zoom_factor - 1), kWindowSize.y / pow(2, view_zoom_factor - 1)));
-
-    camera_speed =  1 * view.getSize().x;
-
-    view.move(sf::Vector2f(
-        ((input_right_held - input_left_held) * camera_speed) * delta_time.asSeconds(), 
-        ((input_down_held - input_up_held) * camera_speed) * delta_time.asSeconds()
-    ));
     
 }
 
@@ -259,25 +244,10 @@ void Game::SetTileSpriteTexture(sf::Sprite& sprite, int tile_type) {
 }
 
 
-void Game::GetTextureFromSpritesheet(int index_x, int index_y, sf::Texture& spritesheet, int resolution, sf::Sprite& sprite) {
+void Game::GetTextureFromSpritesheet(int index_x, int index_y, sf::Texture& spritesheet, 
+    int resolution, sf::Sprite& sprite) {
 
     sprite.setTexture(spritesheet);
     sprite.setTextureRect(sf::IntRect({index_x * resolution, index_y * resolution}, {resolution, resolution}));
 }
 
-
-void Game::SetViewVariables() {
-    view_bounds = view.getViewport();
-    view_center = view.getCenter();
-    view_size = view.getSize();
-
-    view_start_position = sf::Vector2i(
-        view_center.x / kTileResolution - (view_size.x / kTileResolution / 2),
-        view_center.y / kTileResolution - (view_size.y / kTileResolution / 2)
-    );
-
-    view_end_position = sf::Vector2i(
-        view_start_position.x + (view_size.x / kTileResolution) + 2,
-        view_start_position.y + (view_size.y / kTileResolution) + 2
-    );
-}
