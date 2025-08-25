@@ -51,11 +51,11 @@ void InputHandler::CheckEventInput(const std::optional<sf::Event> event) {
 
 
 void InputHandler::ExecuteInputsCamera() {
-    if (mouse_wheel_delta_){game_.camera.zoom_factor_ -= mouse_wheel_delta_ * 0.5f;}
+    if (mouse_wheel_delta_){game_.camera_.zoom_factor_ -= mouse_wheel_delta_ * 0.5f;}
     mouse_wheel_delta_ = 0;
 
-    game_.camera.position_.x += (right_held_-left_held_)*game_.camera.move_speed_ * game_.delta_time.asSeconds(); //game_.delta_time.asSeconds()
-    game_.camera.position_.y += (down_held_-up_held_)*game_.camera.move_speed_ * game_.delta_time.asSeconds(); 
+    game_.camera_.position_.x += (right_held_-left_held_)*game_.camera_.move_speed_ * game_.delta_time_.asSeconds(); //game_.delta_time.asSeconds()
+    game_.camera_.position_.y += (down_held_-up_held_)*game_.camera_.move_speed_ * game_.delta_time_.asSeconds(); 
 }
 
 
@@ -64,12 +64,12 @@ void InputHandler::ExecuteInputsGame() {
     spacebar_pressed_ = false;
 
     if (lmb_held_) {
-        game_.my_circle.setFillColor(sf::Color::Green);
+        game_.my_circle_.setFillColor(sf::Color::Green);
         game_.PlaceTile(mouse_position_, true);
         return;
     }
     if (rmb_held_) {
-        game_.my_circle.setFillColor(sf::Color::Red);
+        game_.my_circle_.setFillColor(sf::Color::Red);
         game_.PlaceTile(mouse_position_, false);
         return;
     }

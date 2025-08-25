@@ -5,7 +5,7 @@
 
 class Tile {
     private:
-        int type_id;
+        int type_id_;
 
     public:
         Tile(int type = 0);

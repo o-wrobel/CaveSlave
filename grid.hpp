@@ -8,11 +8,11 @@
 
 class Grid {
     private:
-        sf::Vector2i size;
-        std::vector<std::vector<Tile>> tile_grid;
+        sf::Vector2i size_;
+        std::vector<std::vector<Tile>> tile_grid_;
 
         void Build_Grid();
-        static const std::unordered_map<std::string, int> tile_names;
+        static const std::unordered_map<std::string, int> kTileNames;
 
     public:
         Grid(int x, int y);

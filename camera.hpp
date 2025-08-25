@@ -27,5 +27,7 @@ public:
     sf::View GetView();
 
     friend class InputHandler;
+    
 };
+
 #endif
