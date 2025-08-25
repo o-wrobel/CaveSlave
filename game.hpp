@@ -5,6 +5,7 @@
 
 #include "grid.hpp"
 #include "camera.hpp"
+#include "input_handler.hpp"
 
 class Game {
     private:
@@ -39,6 +40,7 @@ class Game {
         int tile_place_type;
         sf::Vector2i last_tile_placed_position;
         sf::CircleShape my_circle;
+        InputHandler input_handler_;
 
         // Input state variables
 
@@ -53,6 +55,8 @@ class Game {
         bool rmb_held;
 
         float mouse_wheel_delta;
+
+        
 
         // Private methods
 
@@ -70,6 +74,10 @@ class Game {
 
         Game(unsigned int window_size_x, unsigned int window_size_y); // Constructor declaration
         void GameLoop();
+        
+        friend class InputHandler;
+
+
         
 };
 

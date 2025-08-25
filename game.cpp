@@ -2,6 +2,7 @@
 #include "grid.hpp"
 #include "tile.hpp"
 #include "camera.hpp"
+#include "input_handler.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -10,9 +11,10 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     kWindowCenter({kWindowSize.x / 2, kWindowSize.y / 2}),
 
     kTileResolution(8),
-    camera(window),
     
     window(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "project"),
+    camera(window),
+    input_handler_(*this, window),
     clock(),
 
     tile_texture(sf::Vector2u(8, 8)),
@@ -28,6 +30,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     tile_place_type(1)
         
 {    
+
     // set position for circle
     my_circle.setFillColor(sf::Color::Blue);
     my_circle.setOrigin({my_circle.getRadius(), my_circle.getRadius()});
@@ -104,14 +107,6 @@ void Game::CheckEvents() {
                 mouse_world_position.y / kTileResolution
             );
         }
-
-        //check if mouse buttons are pressed (for the first time in a while)
-        // rmb_pressed = false;
-        // lmb_pressed = false;
-        // if (const auto* mouseButtonPressed = event->getIf<sf::Event::MouseButtonPressed>()){
-        //     rmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Right;
-        //     lmb_pressed = mouseButtonPressed->button == sf::Mouse::Button::Left;
-        // }
 
         //check mouse wheel movement
         if (const auto* mouseWheelMoved = event->getIf<sf::Event::MouseWheelScrolled>()){
