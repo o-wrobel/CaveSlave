@@ -5,14 +5,14 @@
 #include <algorithm>
 #include <cmath>
 
-Camera::Camera(Game& game, sf::Window& window)
+Camera::Camera(Game& game)
     : game_(game),
-    window_(window), 
-    view_(sf::FloatRect({0, 0}, {window.getSize().x * 1.f, window.getSize().x * 1.f})),
-    kWindowSize(sf::Vector2u(window.getSize().x, window.getSize().y)),
+    window_(game_.window_), 
+    view_(sf::FloatRect({0, 0}, {window_.getSize().x * 1.f, window_.getSize().x * 1.f})),
+    kWindowSize(sf::Vector2u(window_.getSize().x, window_.getSize().y)),
     zoom_factor_(1.f)
 {
-    view_.setCenter({window.getSize().x * 0.5f, window.getSize().x * 0.5f});
+    view_.setCenter({window_.getSize().x * 0.5f, window_.getSize().x * 0.5f});
 }
 
 

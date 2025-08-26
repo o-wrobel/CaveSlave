@@ -4,7 +4,10 @@
 
 #include <SFML/Graphics.hpp>
 
-InputHandler::InputHandler(Game& game, sf::Window& window) : game_(game), window_(window) {
+InputHandler::InputHandler(Game& game)
+    : game_(game), 
+    window_(game_.window_) 
+{
 
 }
 

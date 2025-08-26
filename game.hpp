@@ -6,6 +6,9 @@
 #include "grid.hpp"
 #include "camera.hpp"
 #include "input_handler.hpp"
+#include "user_interface.hpp"
+
+// class UserInterface; //necessary for some reason
 
 class Game {
     private:
@@ -36,16 +39,13 @@ class Game {
 
         int tile_place_type_;
         sf::Vector2i last_tile_placed_position_;
-        
-        
 
         // Private methods
 
         void CheckEvents();
-        void SetTextures();
         void DrawGrid(Grid grid);
         void DrawTile(Tile& tile, int x, int y);
-        void SetInputVariables();
+        void DrawUI();
         
         void SetTileSpriteTexture(sf::Sprite& sprite, int tile_type);
         void GetTextureFromSpritesheet(int index_x, int index_y, sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
@@ -54,7 +54,10 @@ class Game {
 
         sf::RenderWindow window_;
         Camera camera_;
+        UserInterface user_interface_;
         InputHandler input_handler_;
+        
+
         sf::Time delta_time_;
 
         sf::CircleShape my_circle_;

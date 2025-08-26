@@ -30,7 +30,7 @@ public:
     
 
     InputHandler(); // Default constructor // neccessary for some reason
-    InputHandler(Game& game, sf::Window& window);
+    InputHandler(Game& game);
     void CheckInput();
     void CheckEventInput(const std::optional<sf::Event> event);
     void ExecuteInputsCamera();

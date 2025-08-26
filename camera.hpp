@@ -29,7 +29,7 @@ public:
     sf::Vector2f view_end_position_;
 
     Camera();
-    Camera(Game& game, sf::Window& window);
+    Camera(Game& game);
     void Update();
     void MoveCamera(sf::Vector2f offset);
     void ChangeZoom(float zoom_offset);

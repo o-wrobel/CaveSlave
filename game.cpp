@@ -13,8 +13,10 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
     kTileResolution(8),
     
     window_(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "project"),
-    camera_(*this, window_),
-    input_handler_(*this, window_),
+    camera_(*this),
+    user_interface_(*this),
+    input_handler_(*this),
+    
     clock_(),
 
     tile_texture_(sf::Vector2u(8, 8)),
