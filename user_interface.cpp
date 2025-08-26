@@ -28,6 +28,7 @@ UserInterface::UserInterface(Game& game)
 
 void UserInterface::Update() {
     my_circle_.setFillColor(sf::Color::Blue);
+    tile_preview_.Update();
     
     return;
 }

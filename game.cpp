@@ -48,23 +48,23 @@ void Game::GameLoop() {
 
         input_handler_.ExecuteInputsCamera();
         camera_.Update();
+        
         input_handler_.ExecuteInputsGame(); 
-
-        user_interface_.tile_preview_.Update();
-
-        // clear the window with black color
-        window_.clear(sf::Color::Black);
-
+        
         //view stuff
         view_ = camera_.GetView();
         window_.setView(view_);
 
+        window_.clear(sf::Color::Black);
+
+        //DRAWING
+
         //Draw game world objects
         DrawGrid(game_grid_);
 
-        // draw ui here...
         window_.setView(window_.getDefaultView());
 
+        // draw ui here...
         user_interface_.Draw();
 
         // end the current frame
