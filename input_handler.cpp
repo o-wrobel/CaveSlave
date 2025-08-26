@@ -65,10 +65,7 @@ void InputHandler::ExecuteInputsCamera() {
 
 
 void InputHandler::ExecuteInputsGame() {
-    if(spacebar_pressed_){
-        game_.NextTilePlaceType();
-        // game_.user_interface_.tile_preview_.NextTileType();
-    } 
+    if(spacebar_pressed_){game_.NextTilePlaceType();} 
     spacebar_pressed_ = false;
 
     if (lmb_held_) {

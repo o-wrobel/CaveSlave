@@ -50,6 +50,8 @@ void Game::GameLoop() {
         camera_.Update();
         input_handler_.ExecuteInputsGame(); 
 
+        user_interface_.tile_preview_.Update();
+
         // clear the window with black color
         window_.clear(sf::Color::Black);
 
@@ -148,7 +150,8 @@ void Game::NextTilePlaceType() {
     if (tile_place_type_ >= kTileTypeCount) {
             tile_place_type_ = 1;
         }
-    user_interface_.tile_preview_.NextTileType();
+    user_interface_.tile_preview_.tile_type_ = tile_place_type_;
+    // user_interface_.tile_preview_.NextTileType();
     return;
 }
 

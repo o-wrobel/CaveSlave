@@ -28,6 +28,7 @@ UserInterface::UserInterface(Game& game)
 
 void UserInterface::Update() {
     my_circle_.setFillColor(sf::Color::Blue);
+    
     return;
 }
 
@@ -73,6 +74,11 @@ TilePreview::TilePreview(sf::Vector2f position, const sf::Texture& spritesheet, 
 void TilePreview::NextTileType(){
     tile_type_++;
     if (tile_type_ >= kTileTypeCount) {tile_type_ = 1;}
+    Game::SetTileSpriteTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
+}
+
+
+void TilePreview::Update(){
     Game::SetTileSpriteTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
 }
 
