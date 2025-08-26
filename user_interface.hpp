@@ -14,17 +14,18 @@ private:
     sf::Vector2f position_;
     
     sf::Texture tile_texture_;
-    sf::Sprite sprite_;
-    sf::RectangleShape background_;
+    
+    
 
 public:
     sf::Texture kTileSpritesheet;
+    sf::Sprite sprite_;
+    sf::RectangleShape background_;
     int tile_type_;
     TilePreview(sf::Vector2f position, const sf::Texture& spritesheet, int tile_resolution, int tile_type_count);
     void NextTileType();
     void Update();
-    sf::Texture& GetTexture();
-    sf::Sprite& GetSprite();
+    void Draw(sf::RenderWindow& window);
     sf::RectangleShape& GetBackground();
 
 };
@@ -40,7 +41,7 @@ private:
 public:
     TileOverlay(Game& game, int tile_resolution);
     void Update();
-    void Draw();
+    void Draw(sf::RenderWindow& window);
 };
 
 

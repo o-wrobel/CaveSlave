@@ -43,7 +43,6 @@ void Game::GameLoop() {
         delta_time_ = clock_.restart();
         user_interface_.Update();
         
-
         CheckEvents(); // check all the window's events that were triggered since the last iteration of the loop
         input_handler_.CheckInput();
 
@@ -66,7 +65,7 @@ void Game::GameLoop() {
 
         //Draw game world objects
         DrawGrid(game_grid_);
-        user_interface_.tile_overlay_.Draw();
+        user_interface_.tile_overlay_.Draw(window_);
 
         window_.setView(window_.getDefaultView());
 

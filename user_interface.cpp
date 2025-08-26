@@ -34,8 +34,7 @@ void UserInterface::Update() {
 
 void UserInterface::Draw() {
     window_.draw(my_circle_);
-    window_.draw(tile_preview_.GetBackground());
-    window_.draw(tile_preview_.GetSprite());
+    tile_preview_.Draw(window_);
     return;
 }
 
@@ -82,10 +81,10 @@ void TilePreview::Update(){
 }
 
 
-sf::Texture& TilePreview::GetTexture(){return tile_texture_;}
-
-
-sf::Sprite& TilePreview::GetSprite() {return sprite_;}
+void TilePreview::Draw(sf::RenderWindow& window){
+    window.draw(background_);
+    window.draw(sprite_);
+}
 
 
 sf::RectangleShape& TilePreview::GetBackground() {return background_;}
@@ -108,6 +107,6 @@ void TileOverlay::Update(){
     sprite_.setPosition({grid_position_.x * kTileResolution_ * 1.f, grid_position_.y * kTileResolution_ * 1.f}); 
 }
 
-void TileOverlay::Draw(){
-    game_.window_.draw(sprite_);
+void TileOverlay::Draw(sf::RenderWindow& window){
+    window.draw(sprite_);
 }
