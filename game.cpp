@@ -6,14 +6,14 @@
 
 #include <SFML/Graphics.hpp>
 
-Game::Game(unsigned int window_size_x, unsigned int window_size_y)
+Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate_limit)
   : kWindowSize({window_size_x, window_size_y}),
     kWindowCenter({kWindowSize.x / 2, kWindowSize.y / 2}),
 
     kTileResolution(8),
     
     window_(sf::VideoMode({kWindowSize.x, kWindowSize.y}), "project"),
-    camera_(window_),
+    camera_(*this, window_),
     input_handler_(*this, window_),
     clock_(),
 
@@ -28,9 +28,10 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y)
     game_grid_(grid_size_.x, grid_size_.y),
 
     my_circle_(6), 
-    tile_place_type_(0)
+    tile_place_type_(1)
         
 {    
+    window_.setFramerateLimit(framerate_limit);
 
     // set position for circle
     my_circle_.setFillColor(sf::Color::Blue);
@@ -171,6 +172,9 @@ void Game::NextTilePlaceType() {
     SetTileSpriteTexture(tile_preview_sprite_, tile_place_type_);
     return;
 }
+
+
+sf::Time Game::GetDeltaTime() {return delta_time_;}
 
 
 void Game::SetTileSpriteTexture(sf::Sprite& sprite, int tile_type) {

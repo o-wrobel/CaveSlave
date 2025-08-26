@@ -1,11 +1,13 @@
+#include "game.hpp"
 #include "camera.hpp"
 
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <cmath>
 
-Camera::Camera(sf::Window& window)
-    : window_(window), 
+Camera::Camera(Game& game, sf::Window& window)
+    : game_(game),
+    window_(window), 
     view_(sf::FloatRect({0, 0}, {window.getSize().x * 1.f, window.getSize().x * 1.f})),
     kWindowSize(sf::Vector2u(window.getSize().x, window.getSize().y)),
     zoom_factor_(1.f)
@@ -15,6 +17,8 @@ Camera::Camera(sf::Window& window)
 
 
 void Camera::Update(){
+    delta_time_ = game_.GetDeltaTime();
+
     move_speed_ =  1 * view_.getSize().x;
     zoom_factor_ = std::clamp(zoom_factor_, 0.8f, 7.0f);
     view_.setSize(sf::Vector2f(kWindowSize.x / pow(2, zoom_factor_ - 1), kWindowSize.y / pow(2, zoom_factor_ - 1)));
@@ -24,6 +28,15 @@ void Camera::Update(){
 
     view_start_position_ = position_ - view_size * 0.5f; 
     view_end_position_ = view_start_position_ + view_size;
+}
+
+
+void Camera::MoveCamera(sf::Vector2f offset){
+    position_ += offset * move_speed_ * delta_time_.asSeconds();
+}
+
+void Camera::ChangeZoom(float zoom_offset){
+    zoom_factor_ += zoom_offset;
 }
 
 

@@ -34,7 +34,7 @@ void InputHandler::CheckEventInput(const std::optional<sf::Event> event) {
 
     //check mouse wheel movement
     if (const auto* mouseWheelMoved = event->getIf<sf::Event::MouseWheelScrolled>()){
-        mouse_wheel_delta_ = -1 * mouseWheelMoved->delta;
+        mouse_wheel_delta_ = mouseWheelMoved->delta;
     }
 
     if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
@@ -51,11 +51,12 @@ void InputHandler::CheckEventInput(const std::optional<sf::Event> event) {
 
 
 void InputHandler::ExecuteInputsCamera() {
-    if (mouse_wheel_delta_){game_.camera_.zoom_factor_ -= mouse_wheel_delta_ * 0.5f;}
+    if (mouse_wheel_delta_){game_.camera_.ChangeZoom(mouse_wheel_delta_ * 0.5f);} //game_.camera_.zoom_factor_ -= mouse_wheel_delta_ * 0.5f;
     mouse_wheel_delta_ = 0;
 
-    game_.camera_.position_.x += (right_held_-left_held_)*game_.camera_.move_speed_ * game_.delta_time_.asSeconds(); //game_.delta_time.asSeconds()
-    game_.camera_.position_.y += (down_held_-up_held_)*game_.camera_.move_speed_ * game_.delta_time_.asSeconds(); 
+    if(right_held_ || left_held_ || up_held_ || down_held_){
+        game_.camera_.MoveCamera({right_held_-left_held_ * 1.f, down_held_-up_held_ * 1.f});
+    }
 }
 
 
