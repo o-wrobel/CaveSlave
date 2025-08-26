@@ -10,31 +10,24 @@ UserInterface::UserInterface(Game& game)
     : game_(game),
     window_(game_.window_),
     
-    kTileSpritesheet(game_.kTileSpritesheet),
-    kTileResolution(8), //game_.kTileResolution doesn't work for some reason
+    // kTileSpritesheet(game_.kTileSpritesheet),
+    placeholder(sf::Vector2u(1, 1)),
+    kTileResolution(8),
+    tile_preview_({window_.getSize().x - 60.f, 60.f}, placeholder, kTileResolution, game_.kTileTypeCount),
+     //game_.kTileResolution doesn't work for some reason
 
-    tile_preview_({window_.getSize().x - 60.f, 60.f}, kTileResolution, game_.kTileTypeCount),
+    
 
     my_circle_(6)
 {
     my_circle_.setFillColor(sf::Color::Blue);
     my_circle_.setOrigin({my_circle_.getRadius(), my_circle_.getRadius()});
-    my_circle_.setPosition({(30) * 1.f, (30) * 1.f});
-
-    game_.SetTileSpriteTexture(tile_preview_.GetSprite(), kTileSpritesheet, kTileResolution, tile_preview_.tile_type_);
-}
-
-
-void UserInterface::NextTilePlaceType() {
-    tile_preview_.NextTileType();
-    game_.SetTileSpriteTexture(tile_preview_.GetSprite(), kTileSpritesheet, kTileResolution, tile_preview_.tile_type_);
-    return;
+    my_circle_.setPosition({(30) * 1.f, (30) * 1.f}); 
 }
 
 
 void UserInterface::Update() {
     my_circle_.setFillColor(sf::Color::Blue);
-    // game_.SetTileSpriteTexture(tile_preview_sprite_, kTileSpritesheet, kTileResolution, tile_place_type_);
     return;
 }
 
@@ -50,13 +43,14 @@ void UserInterface::Draw() {
 // TILE PREVIEW
 
 
-TilePreview::TilePreview(sf::Vector2f position, int tile_resolution, int tile_type_count) 
+TilePreview::TilePreview(sf::Vector2f position, const sf::Texture& spritesheet, int tile_resolution, int tile_type_count) 
     : kTileResolution(tile_resolution), 
     kTileTypeCount(tile_type_count), 
+    kTileSpritesheet(spritesheet),
 
     position_(position),
 
-    tile_texture_(sf::Vector2u(tile_resolution, tile_resolution)),
+    tile_texture_(sf::Vector2u(kTileResolution, kTileResolution)),
     sprite_(tile_texture_),
     background_(sf::Vector2f(kTileResolution, kTileResolution)),
 
@@ -79,6 +73,7 @@ TilePreview::TilePreview(sf::Vector2f position, int tile_resolution, int tile_ty
 void TilePreview::NextTileType(){
     tile_type_++;
     if (tile_type_ >= kTileTypeCount) {tile_type_ = 1;}
+    Game::SetTileSpriteTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
 }
 
 

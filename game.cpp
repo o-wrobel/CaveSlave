@@ -9,6 +9,7 @@
 Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate_limit)
   : kWindowSize({window_size_x, window_size_y}),
     kWindowCenter({kWindowSize.x / 2, kWindowSize.y / 2}),
+    kTileSpritesheet("sprites/tiles/tiles.png"),
 
     kTileResolution(8),
     
@@ -20,11 +21,8 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
     clock_(),
 
     tile_texture_(sf::Vector2u(8, 8)),
-    kTileSpritesheet("sprites/tiles/tiles.png"),
 
     tile_sprite_(tile_texture_),
-    // tile_preview_sprite_(tile_texture_),
-    // black_square_(sf::Vector2f(kTileResolution, kTileResolution)),
 
     grid_size_(64, 64),
     game_grid_(grid_size_.x, grid_size_.y),
@@ -32,7 +30,9 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
     tile_place_type_(1)
         
 {    
-    window_.setFramerateLimit(framerate_limit);
+    if(framerate_limit) {window_.setFramerateLimit(framerate_limit);}
+
+    user_interface_.tile_preview_.kTileSpritesheet = kTileSpritesheet;
 }
 
 
@@ -148,6 +148,7 @@ void Game::NextTilePlaceType() {
     if (tile_place_type_ >= kTileTypeCount) {
             tile_place_type_ = 1;
         }
+    user_interface_.tile_preview_.NextTileType();
     return;
 }
 

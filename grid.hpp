@@ -3,12 +3,14 @@
 
 #include <iostream>
 #include <unordered_map>
+#include <vector>
 
 #include "tile.hpp"
 
 class Grid {
     private:
-        sf::Vector2i size_;
+        int size_[2];
+
         std::vector<std::vector<Tile>> tile_grid_;
 
         void Build_Grid();

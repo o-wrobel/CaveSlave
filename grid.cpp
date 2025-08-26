@@ -1,14 +1,13 @@
 #include <iostream>
 
-#include "game.hpp"
 #include "grid.hpp"
 #include "tile.hpp"
 
 Grid::Grid(int x, int y)
-    : size_(x, y)
+    : size_{x, y}
     {
 
-    tile_grid_.resize(size_.y, std::vector<Tile>(size_.x, Tile()));
+    tile_grid_.resize(size_[1], std::vector<Tile>(size_[0], Tile()));
 
     Build_Grid();
 }
@@ -17,35 +16,35 @@ Grid::Grid(int x, int y)
 void Grid::Build_Grid() {
     
     //build line of stone floor
-    for (int i = 0; i < size_.x; i++) {
+    for (int i = 0; i < size_[0]; i++) {
         SetTile(i, 4,  "stone_floor");
     }
 
     //build stone underneath
-    for (int row = 5; row < size_.x; row++) {
-        for (int col = 0; col < size_.x; col++) {
+    for (int row = 5; row < size_[1]; row++) {
+        for (int col = 0; col < size_[0]; col++) {
             SetTile(col, row, "stone");
         }
     }
 
     //box of crates
-    for (int col = 0; col < size_.y; col++) {      
+    for (int col = 0; col < size_[1]; col++) {      
         SetTile(col, 0, "crate");      
     }
-    for (int col = 0; col < size_.x; col++) {      
-        SetTile(col, size_.y - 1, "crate");      
+    for (int col = 0; col < size_[0]; col++) {      
+        SetTile(col, size_[1] - 1, "crate");      
     }
-    for (int row = 0; row < size_.x; row++) {      
+    for (int row = 0; row < size_[0]; row++) {      
         SetTile(0, row, "crate");      
     }
-    for (int row = 0; row < size_.x; row++) {      
-        SetTile(size_.x - 1, row, "crate");      
+    for (int row = 0; row < size_[0]; row++) {      
+        SetTile(size_[0] - 1, row, "crate");      
     }
 };
 
 
 void Grid::SetTile(int x, int y, int tile_type) {
-    if (x >= 0 && x < size_.x && y >= 0 && y < size_.x) {
+    if (x >= 0 && x < size_[0] && y >= 0 && y < size_[1]) {
 
         tile_grid_[y][x].ChangeType(tile_type);
 
@@ -56,7 +55,7 @@ void Grid::SetTile(int x, int y, int tile_type) {
 
 
 void Grid::SetTile(int x, int y, const std::string& type_name) {
-    if (x >= 0 && x < size_.x && y >= 0 && y < size_.x) {
+    if (x >= 0 && x < size_[0] && y >= 0 && y < size_[1]) {
         if (type_name != "") {
             tile_grid_[y][x].ChangeType(GetTypeID(type_name));
         } else {
@@ -70,7 +69,7 @@ void Grid::SetTile(int x, int y, const std::string& type_name) {
 
 
 Tile Grid::GetTile(int x, int y) const {
-    if (x >= 0 && x < size_.x && y >= 0 && y < size_.y) {
+    if (x >= 0 && x < size_[0] && y >= 0 && y < size_[1]) {
         return tile_grid_[y][x];
     } else {
         std::cerr << "Error: Attempted to get tile out of bounds (" << x << ", " << y << ")\n";

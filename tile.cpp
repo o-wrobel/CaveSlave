@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "tile.hpp"
 
 Tile::Tile(int type) : type_id_(type) , type_changed(true) {

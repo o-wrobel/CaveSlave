@@ -8,7 +8,7 @@
 #include "input_handler.hpp"
 #include "user_interface.hpp"
 
-// class UserInterface; //necessary for some reason
+// class UserInterface;
 
 class Game {
     private:
@@ -27,9 +27,6 @@ class Game {
         sf::Texture tile_texture_;
 
         sf::Sprite tile_sprite_;
-        // sf::FloatRect tile_preview_bounds_;
-        // sf::Sprite tile_preview_sprite_;
-        // sf::RectangleShape black_square_;
 
         sf::Vector2f mouse_world_position_;
         sf::Vector2i mouse_grid_position_;
@@ -58,7 +55,7 @@ class Game {
         static const int kTileTypeCount = 8;
         int tile_place_type_;
 
-        Game(unsigned int window_size_x, unsigned int window_size_y, int framerate_limit = 60); // Constructor declaration
+        Game(unsigned int window_size_x, unsigned int window_size_y, int framerate_limit = 0); // Constructor declaration
         void GameLoop();
 
         void PlaceTile(sf::Vector2i mouse_position, bool mouse_button_held);
@@ -67,5 +64,9 @@ class Game {
         sf::Time GetDeltaTime();
         
 };
+
+// void SetTileSpriteTexture(sf::Sprite& sprite, const sf::Texture& tile_spritesheet, int resolution, int tile_type);
+// void GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
+
 
 #endif // GAME_HPP

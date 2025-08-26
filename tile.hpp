@@ -1,8 +1,6 @@
 #ifndef TILE_HPP
 #define TILE_HPP
 
-#include <iostream>
-
 class Tile {
     private:
         int type_id_;
