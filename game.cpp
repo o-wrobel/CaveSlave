@@ -16,42 +16,36 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
     camera_(*this),
     user_interface_(*this),
     input_handler_(*this),
-    
+
     clock_(),
 
     tile_texture_(sf::Vector2u(8, 8)),
-    tile_spritesheet_("sprites/tiles/tiles.png"),
+    kTileSpritesheet("sprites/tiles/tiles.png"),
 
     tile_sprite_(tile_texture_),
     tile_preview_sprite_(tile_texture_),
-    black_square(sf::Vector2f(kTileResolution, kTileResolution)),
+    black_square_(sf::Vector2f(kTileResolution, kTileResolution)),
 
     grid_size_(64, 64),
     game_grid_(grid_size_.x, grid_size_.y),
 
-    my_circle_(6), 
     tile_place_type_(1)
         
 {    
     window_.setFramerateLimit(framerate_limit);
 
-    // set position for circle
-    my_circle_.setFillColor(sf::Color::Blue);
-    my_circle_.setOrigin({my_circle_.getRadius(), my_circle_.getRadius()});
-    my_circle_.setPosition({kWindowSize.x * 0.02f, kWindowSize.y * 0.02f});
-
     // set position for tile
-    SetTileSpriteTexture(tile_preview_sprite_, tile_place_type_);
+    SetTileSpriteTexture(tile_preview_sprite_, kTileSpritesheet, kTileResolution, tile_place_type_);
     tile_preview_sprite_.setOrigin({kTileResolution/2.f, kTileResolution/2.f});
     tile_preview_sprite_.setPosition({kWindowSize.x * 0.92f, kWindowSize.y * 0.10f});
     tile_preview_sprite_.setColor(sf::Color(255, 255, 255, 200));
     tile_preview_sprite_.setScale(sf::Vector2f(6.f, 6.f));
 
 
-    black_square.setFillColor(sf::Color(0, 0, 0, 200));
-    black_square.setOrigin({kTileResolution/2.f, kTileResolution/2.f});
-    black_square.setPosition({kWindowSize.x * 0.92f, kWindowSize.y * 0.10f});
-    black_square.setScale(sf::Vector2f(6.f, 6.f));
+    black_square_.setFillColor(sf::Color::White); //sf::Color(0, 0, 0, 200)
+    black_square_.setOrigin({kTileResolution/2.f, kTileResolution/2.f});
+    black_square_.setPosition({kWindowSize.x * 0.5f, kWindowSize.y * 0.5f}); //{kWindowSize.x * 0.92f, kWindowSize.y * 0.10f}
+    black_square_.setScale(sf::Vector2f(6.f, 6.f));
 
 
 }
@@ -62,14 +56,14 @@ void Game::GameLoop() {
     while (window_.isOpen())
     {        
         delta_time_ = clock_.restart();
-        my_circle_.setFillColor(sf::Color::Blue);
+        user_interface_.Update();
 
         CheckEvents(); // check all the window's events that were triggered since the last iteration of the loop
         input_handler_.CheckInput();
 
         input_handler_.ExecuteInputsCamera();
         camera_.Update();
-        input_handler_.ExecuteInputsGame();  
+        input_handler_.ExecuteInputsGame(); 
 
         // clear the window with black color
         window_.clear(sf::Color::Black);
@@ -84,9 +78,9 @@ void Game::GameLoop() {
         // draw ui here...
         window_.setView(window_.getDefaultView());
 
-        window_.draw(my_circle_);
-        window_.draw(black_square);
-        window_.draw(tile_preview_sprite_);
+        // user_interface_.Draw();
+        window_.draw(black_square_);
+        // window_.draw(tile_preview_sprite_);
 
         // end the current frame
         window_.display();
@@ -133,7 +127,7 @@ void Game::DrawGrid(Grid grid) {
 
 void Game::DrawTile(Tile& tile, int x, int y) {
     if (tile.type_changed){
-        SetTileSpriteTexture(tile_sprite_, tile.GetType());
+        SetTileSpriteTexture(tile_sprite_, kTileSpritesheet, kTileResolution, tile.GetType());
     }
     tile.type_changed = false; 
 
@@ -171,7 +165,7 @@ void Game::NextTilePlaceType() {
     if (tile_place_type_ >= kTileTypeCount) {
             tile_place_type_ = 1;
         }
-    SetTileSpriteTexture(tile_preview_sprite_, tile_place_type_);
+    SetTileSpriteTexture(tile_preview_sprite_, kTileSpritesheet, kTileResolution, tile_place_type_);
     return;
 }
 
@@ -179,39 +173,39 @@ void Game::NextTilePlaceType() {
 sf::Time Game::GetDeltaTime() {return delta_time_;}
 
 
-void Game::SetTileSpriteTexture(sf::Sprite& sprite, int tile_type) {
+void Game::SetTileSpriteTexture(sf::Sprite& sprite, const sf::Texture& tile_spritesheet, int kTileResolution, int tile_type) {
     switch (tile_type)
     {
     case 1: //stone
-        GetTextureFromSpritesheet(0, 0, tile_spritesheet_, kTileResolution, sprite);
+        GetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);
         break;
     case 2: //stone_floor
-        GetTextureFromSpritesheet(1, 0, tile_spritesheet_, kTileResolution, sprite);
+        GetTextureFromSpritesheet(1, 0, tile_spritesheet, kTileResolution, sprite);
         break;
     case 3: //gem
-        GetTextureFromSpritesheet(2, 0, tile_spritesheet_, kTileResolution, sprite);
+        GetTextureFromSpritesheet(2, 0, tile_spritesheet, kTileResolution, sprite);
         break;
     case 4: //gold
-        GetTextureFromSpritesheet(3, 0, tile_spritesheet_, kTileResolution, sprite);
+        GetTextureFromSpritesheet(3, 0, tile_spritesheet, kTileResolution, sprite);
         break;
     case 5: //trap
-        GetTextureFromSpritesheet(0, 1, tile_spritesheet_, kTileResolution, sprite);
+        GetTextureFromSpritesheet(0, 1, tile_spritesheet, kTileResolution, sprite);
         break;
     case 6: //pebbles
-        GetTextureFromSpritesheet(2, 1, tile_spritesheet_, kTileResolution, sprite);
+        GetTextureFromSpritesheet(2, 1, tile_spritesheet, kTileResolution, sprite);
         break;
     case 7: //crate
-        GetTextureFromSpritesheet(1, 1, tile_spritesheet_, kTileResolution, sprite);
+        GetTextureFromSpritesheet(1, 1, tile_spritesheet, kTileResolution, sprite);
         break;
     
     default:
-        sprite.setTexture(tile_texture_);
+        GetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);;
         break;
     }
 }
 
 
-void Game::GetTextureFromSpritesheet(int index_x, int index_y, sf::Texture& spritesheet, 
+void Game::GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, 
     int resolution, sf::Sprite& sprite) {
 
     sprite.setTexture(spritesheet);

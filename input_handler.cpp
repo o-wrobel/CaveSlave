@@ -1,6 +1,7 @@
 #include "input_handler.hpp"
 #include "game.hpp"
 #include "camera.hpp"
+#include "user_interface.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -64,16 +65,19 @@ void InputHandler::ExecuteInputsCamera() {
 
 
 void InputHandler::ExecuteInputsGame() {
-    if(spacebar_pressed_){game_.NextTilePlaceType();} 
+    if(spacebar_pressed_){
+        game_.NextTilePlaceType();
+        game_.user_interface_.NextTilePlaceType();
+    } 
     spacebar_pressed_ = false;
 
     if (lmb_held_) {
-        game_.my_circle_.setFillColor(sf::Color::Green);
+        game_.user_interface_.my_circle_.setFillColor(sf::Color::Green);
         game_.PlaceTile(mouse_position_, true);
         return;
     }
     if (rmb_held_) {
-        game_.my_circle_.setFillColor(sf::Color::Red);
+        game_.user_interface_.my_circle_.setFillColor(sf::Color::Red);
         game_.PlaceTile(mouse_position_, false);
         return;
     }
