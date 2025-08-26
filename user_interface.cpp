@@ -12,11 +12,9 @@ UserInterface::UserInterface(Game& game)
     
     // kTileSpritesheet(game_.kTileSpritesheet),
     placeholder(sf::Vector2u(1, 1)),
-    kTileResolution(8),
+    kTileResolution(8), //game_.kTileResolution doesn't work for some reason
     tile_preview_({window_.getSize().x - 60.f, 60.f}, placeholder, kTileResolution, game_.kTileTypeCount),
-     //game_.kTileResolution doesn't work for some reason
-
-    
+    tile_overlay_(game_, kTileResolution),
 
     my_circle_(6)
 {
@@ -91,3 +89,25 @@ sf::Sprite& TilePreview::GetSprite() {return sprite_;}
 
 
 sf::RectangleShape& TilePreview::GetBackground() {return background_;}
+
+// TILE OVERLAY
+
+
+TileOverlay::TileOverlay(Game& game, int tile_resolution)
+ : game_(game),
+   kTileResolution_(tile_resolution),
+   sprite_(sf::Vector2f(kTileResolution_, kTileResolution_))
+ {
+    sprite_.setFillColor(sf::Color::Transparent);
+    sprite_.setOutlineThickness(-1.f);
+    sprite_.setOutlineColor(sf::Color(255, 255, 255, 170));
+ }
+
+void TileOverlay::Update(){
+    grid_position_ = game_.mouse_grid_position_;
+    sprite_.setPosition({grid_position_.x * kTileResolution_ * 1.f, grid_position_.y * kTileResolution_ * 1.f}); 
+}
+
+void TileOverlay::Draw(){
+    game_.window_.draw(sprite_);
+}

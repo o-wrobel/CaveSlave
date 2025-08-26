@@ -32,6 +32,7 @@ void InputHandler::CheckInput() {
 void InputHandler::CheckEventInput(const std::optional<sf::Event> event) {
     //Check if mouse moved and calculate mouse positions
     if (const auto* mouse_moved = event->getIf<sf::Event::MouseMoved>()){
+        game_.mouse_position_ = {mouse_moved->position.x, mouse_moved->position.y};
         mouse_position_ = {mouse_moved->position.x, mouse_moved->position.y};
         
     }

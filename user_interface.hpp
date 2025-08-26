@@ -30,6 +30,20 @@ public:
 };
 
 
+class TileOverlay{
+private:
+    Game& game_;
+    const int kTileResolution_;
+    sf::Vector2i grid_position_; 
+    sf::RectangleShape sprite_;
+
+public:
+    TileOverlay(Game& game, int tile_resolution);
+    void Update();
+    void Draw();
+};
+
+
 class UserInterface {
 private:
     Game& game_;
@@ -41,6 +55,7 @@ private:
 public:
 
     TilePreview tile_preview_;
+    TileOverlay tile_overlay_;
     sf::CircleShape my_circle_;
 
     UserInterface();

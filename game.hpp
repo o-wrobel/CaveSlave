@@ -28,8 +28,8 @@ class Game {
 
         sf::Sprite tile_sprite_;
 
-        sf::Vector2f mouse_world_position_;
-        sf::Vector2i mouse_grid_position_;
+        
+        
 
         sf::Vector2i last_tile_placed_position_;
 
@@ -39,6 +39,7 @@ class Game {
         void DrawGrid(Grid grid);
         void DrawTile(Tile& tile, int x, int y);
         void DrawUI();
+        void UpdateMouseVariables();
         
         static void GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
 
@@ -51,6 +52,11 @@ class Game {
         
         sf::Time delta_time_;
         const sf::Texture kTileSpritesheet;
+
+        sf::Vector2i mouse_position_;
+        sf::Vector2f mouse_world_position_;
+        sf::Vector2i mouse_grid_position_;
+
         const int kTileResolution;
         static const int kTileTypeCount = 8;
         int tile_place_type_;
@@ -64,9 +70,5 @@ class Game {
         sf::Time GetDeltaTime();
         
 };
-
-// void SetTileSpriteTexture(sf::Sprite& sprite, const sf::Texture& tile_spritesheet, int resolution, int tile_type);
-// void GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
-
 
 #endif // GAME_HPP

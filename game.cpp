@@ -42,14 +42,19 @@ void Game::GameLoop() {
     {        
         delta_time_ = clock_.restart();
         user_interface_.Update();
+        
 
         CheckEvents(); // check all the window's events that were triggered since the last iteration of the loop
         input_handler_.CheckInput();
 
+        UpdateMouseVariables();
+
         input_handler_.ExecuteInputsCamera();
         camera_.Update();
-        
+
         input_handler_.ExecuteInputsGame(); 
+        user_interface_.tile_preview_.Update();
+        user_interface_.tile_overlay_.Update();
         
         //view stuff
         view_ = camera_.GetView();
@@ -61,6 +66,7 @@ void Game::GameLoop() {
 
         //Draw game world objects
         DrawGrid(game_grid_);
+        user_interface_.tile_overlay_.Draw();
 
         window_.setView(window_.getDefaultView());
 
@@ -125,11 +131,6 @@ void Game::DrawTile(Tile& tile, int x, int y) {
 
 
 void Game::PlaceTile(sf::Vector2i mouse_position, bool lmb_held) {
-    mouse_world_position_ = window_.mapPixelToCoords(mouse_position, camera_.GetView());
-    mouse_grid_position_ = sf::Vector2i(
-        mouse_world_position_.x / kTileResolution,
-        mouse_world_position_.y / kTileResolution
-    );
     switch (lmb_held) {
     case true:
         game_grid_.SetTile(mouse_grid_position_.x, mouse_grid_position_.y, tile_place_type_);
@@ -153,6 +154,15 @@ void Game::NextTilePlaceType() {
     user_interface_.tile_preview_.tile_type_ = tile_place_type_;
     // user_interface_.tile_preview_.NextTileType();
     return;
+}
+
+
+void Game::UpdateMouseVariables() {
+    mouse_world_position_ = window_.mapPixelToCoords(mouse_position_, camera_.GetView());
+    mouse_grid_position_ = sf::Vector2i(
+        mouse_world_position_.x / kTileResolution,
+        mouse_world_position_.y / kTileResolution
+    );
 }
 
 
