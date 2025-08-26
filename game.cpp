@@ -23,8 +23,8 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
     kTileSpritesheet("sprites/tiles/tiles.png"),
 
     tile_sprite_(tile_texture_),
-    tile_preview_sprite_(tile_texture_),
-    black_square_(sf::Vector2f(kTileResolution, kTileResolution)),
+    // tile_preview_sprite_(tile_texture_),
+    // black_square_(sf::Vector2f(kTileResolution, kTileResolution)),
 
     grid_size_(64, 64),
     game_grid_(grid_size_.x, grid_size_.y),
@@ -33,21 +33,6 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
         
 {    
     window_.setFramerateLimit(framerate_limit);
-
-    // set position for tile
-    SetTileSpriteTexture(tile_preview_sprite_, kTileSpritesheet, kTileResolution, tile_place_type_);
-    tile_preview_sprite_.setOrigin({kTileResolution/2.f, kTileResolution/2.f});
-    tile_preview_sprite_.setPosition({kWindowSize.x * 0.92f, kWindowSize.y * 0.10f});
-    tile_preview_sprite_.setColor(sf::Color(255, 255, 255, 200));
-    tile_preview_sprite_.setScale(sf::Vector2f(6.f, 6.f));
-
-
-    black_square_.setFillColor(sf::Color::White); //sf::Color(0, 0, 0, 200)
-    black_square_.setOrigin({kTileResolution/2.f, kTileResolution/2.f});
-    black_square_.setPosition({kWindowSize.x * 0.5f, kWindowSize.y * 0.5f}); //{kWindowSize.x * 0.92f, kWindowSize.y * 0.10f}
-    black_square_.setScale(sf::Vector2f(6.f, 6.f));
-
-
 }
 
 
@@ -78,9 +63,7 @@ void Game::GameLoop() {
         // draw ui here...
         window_.setView(window_.getDefaultView());
 
-        // user_interface_.Draw();
-        window_.draw(black_square_);
-        // window_.draw(tile_preview_sprite_);
+        user_interface_.Draw();
 
         // end the current frame
         window_.display();
@@ -165,7 +148,6 @@ void Game::NextTilePlaceType() {
     if (tile_place_type_ >= kTileTypeCount) {
             tile_place_type_ = 1;
         }
-    SetTileSpriteTexture(tile_preview_sprite_, kTileSpritesheet, kTileResolution, tile_place_type_);
     return;
 }
 

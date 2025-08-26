@@ -15,10 +15,10 @@ class UserInterface {
         const int kTileTypeCount;
 
         sf::Texture tile_texture_;
-        sf::RectangleShape black_square_;
         
     public:
         sf::CircleShape my_circle_;
+        sf::RectangleShape black_square_;
         sf::Sprite tile_preview_sprite_;
         int tile_place_type_;
 

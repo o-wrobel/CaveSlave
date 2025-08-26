@@ -27,9 +27,9 @@ class Game {
         sf::Texture tile_texture_;
 
         sf::Sprite tile_sprite_;
-        sf::FloatRect tile_preview_bounds_;
-        sf::Sprite tile_preview_sprite_;
-        sf::RectangleShape black_square_;
+        // sf::FloatRect tile_preview_bounds_;
+        // sf::Sprite tile_preview_sprite_;
+        // sf::RectangleShape black_square_;
 
         sf::Vector2f mouse_world_position_;
         sf::Vector2i mouse_grid_position_;
