@@ -56,7 +56,7 @@ void InputHandler::CheckEventInput(const std::optional<sf::Event> event) {
 
 
 void InputHandler::ExecuteInputsCamera() {
-    if (mouse_wheel_delta_){game_.camera_.ChangeZoom(mouse_wheel_delta_ * 0.5f);} //game_.camera_.zoom_factor_ -= mouse_wheel_delta_ * 0.5f;
+    if (mouse_wheel_delta_){game_.camera_.ChangeZoom(mouse_wheel_delta_ * 0.5f);}
     mouse_wheel_delta_ = 0;
 
     if(right_held_ || left_held_ || up_held_ || down_held_){

@@ -6,6 +6,21 @@
 
 class Game;
 
+
+class FPSCounter{
+private:
+    const sf::Font font_;
+    sf::Text text_;
+    const int text_size_;
+    int framerate_;
+
+public:
+    FPSCounter(const sf::Font& font);
+    void Update(const sf::Time& delta_time);
+    void Draw(sf::RenderWindow& window);
+};
+
+
 class TilePreview{
 private:
     const int kTileResolution;
@@ -33,13 +48,13 @@ public:
 
 class TileOverlay{
 private:
-    Game& game_;
+    const Game& kGame;
     const int kTileResolution_;
     sf::Vector2i grid_position_; 
     sf::RectangleShape sprite_;
 
 public:
-    TileOverlay(Game& game, int tile_resolution);
+    TileOverlay(const Game& game, int tile_resolution);
     void Update();
     void Draw(sf::RenderWindow& window);
 };
@@ -58,6 +73,7 @@ public:
     TilePreview tile_preview_;
     TileOverlay tile_overlay_;
     sf::CircleShape my_circle_;
+    FPSCounter fps_counter_;
 
     UserInterface();
     UserInterface(Game& game);

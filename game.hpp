@@ -18,6 +18,7 @@ class Game {
         sf::View view_;
 
         sf::Clock clock_;
+        
 
         sf::Vector2i grid_size_;
         Grid game_grid_;
@@ -28,9 +29,6 @@ class Game {
 
         sf::Sprite tile_sprite_;
 
-        
-        
-
         sf::Vector2i last_tile_placed_position_;
 
         // Private methods
@@ -38,7 +36,6 @@ class Game {
         void CheckEvents();
         void DrawGrid(Grid grid);
         void DrawTile(Tile& tile, int x, int y);
-        void DrawUI();
         void UpdateMouseVariables();
         
         static void GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
@@ -46,6 +43,7 @@ class Game {
     public:
 
         sf::RenderWindow window_;
+        sf::Font font_;
         Camera camera_;
         UserInterface user_interface_;
         InputHandler input_handler_;

@@ -5,11 +5,13 @@
 #include "input_handler.hpp"
 
 #include <SFML/Graphics.hpp>
+#include <algorithm>
 
 Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate_limit)
   : kWindowSize({window_size_x, window_size_y}),
     kWindowCenter({kWindowSize.x / 2, kWindowSize.y / 2}),
-    kTileSpritesheet("sprites/tiles/tiles.png"),
+    font_("assets/fonts/arial.ttf"),
+    kTileSpritesheet("assets/sprites/tiles/tiles.png"),
 
     kTileResolution(8),
     
@@ -101,10 +103,15 @@ void Game::DrawGrid(Grid grid) {
         static_cast<int>(camera_.view_start_position_.x / kTileResolution), 
         static_cast<int>(camera_.view_start_position_.y / kTileResolution)
     };
+    grid_view_start_position_.x = std::clamp(grid_view_start_position_.x, 0, grid_size_.x - 1);
+    grid_view_start_position_.y = std::clamp(grid_view_start_position_.y, 0, grid_size_.y - 1);
+    
     grid_view_end_position_ = {
         static_cast<int>(camera_.view_end_position_.x / kTileResolution), 
         static_cast<int>(camera_.view_end_position_.y / kTileResolution)
     };
+    grid_view_end_position_.x = std::clamp(grid_view_end_position_.x, 0, grid_size_.x - 1);
+    grid_view_end_position_.y = std::clamp(grid_view_end_position_.y, 0, grid_size_.y - 1);
     for (int row = grid_view_start_position_.y; row < grid_view_end_position_.y + 1; row++) {
         for (int col = grid_view_start_position_.x; col < grid_view_end_position_.x + 1; col++) {
             tile = grid.GetTile(col, row);
@@ -151,7 +158,6 @@ void Game::NextTilePlaceType() {
             tile_place_type_ = 1;
         }
     user_interface_.tile_preview_.tile_type_ = tile_place_type_;
-    // user_interface_.tile_preview_.NextTileType();
     return;
 }
 
@@ -162,6 +168,8 @@ void Game::UpdateMouseVariables() {
         mouse_world_position_.x / kTileResolution,
         mouse_world_position_.y / kTileResolution
     );
+    mouse_grid_position_.x = std::clamp(mouse_grid_position_.x, 0, grid_size_.x - 1);
+    mouse_grid_position_.y = std::clamp(mouse_grid_position_.y, 0, grid_size_.y - 1);
 }
 
 
