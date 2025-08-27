@@ -9,6 +9,8 @@ class Game;
 
 class FPSCounter{
 private:
+    sf::Clock timer_;
+    const float frequency_;
     const sf::Font font_;
     sf::Text text_;
     const int text_size_;

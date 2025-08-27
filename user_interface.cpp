@@ -76,12 +76,12 @@ TilePreview::TilePreview(sf::Vector2f position, const sf::Texture& spritesheet, 
 void TilePreview::NextTileType(){
     tile_type_++;
     if (tile_type_ >= kTileTypeCount) {tile_type_ = 1;}
-    Game::SetTileSpriteTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
+    Game::SetSpriteTileTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
 }
 
 
 void TilePreview::Update(){
-    Game::SetTileSpriteTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
+    Game::SetSpriteTileTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
 }
 
 
@@ -89,9 +89,6 @@ void TilePreview::Draw(sf::RenderWindow& window){
     window.draw(background_);
     window.draw(sprite_);
 }
-
-
-sf::RectangleShape& TilePreview::GetBackground() {return background_;}
 
 // TILE OVERLAY
 
@@ -122,18 +119,26 @@ void TileOverlay::Draw(sf::RenderWindow& window){
 
 
 FPSCounter::FPSCounter(const sf::Font& font)
-    :  font_(font),
+    :  frequency_(0.1f),
+    font_(font),
     text_(font_) ,
     text_size_(24)
-{
+{   
+    timer_.restart();
     text_.setCharacterSize(text_size_);
     text_.setFillColor(sf::Color::White);
     text_.setPosition({10.f, 10.f});
 }
 
 void FPSCounter::Update(const sf::Time& delta_time) {
-    framerate_ = static_cast<int>(1.f / delta_time.asSeconds());
-    text_.setString("FPS: " + std::to_string(framerate_));
+    if (timer_.getElapsedTime().asSeconds() >= frequency_) {
+        timer_.restart();
+        framerate_ = static_cast<int>(1.f / delta_time.asSeconds());
+        text_.setString(
+            "FPS: " + std::to_string(framerate_) + '\n'
+            + "Highest: "
+        );
+    }
 }
 
 void FPSCounter::Draw(sf::RenderWindow& window){

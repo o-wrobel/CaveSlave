@@ -33,6 +33,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
         
 {    
     if(framerate_limit) {window_.setFramerateLimit(framerate_limit);}
+    // window_.setIcon();
 
     user_interface_.tile_preview_.kTileSpritesheet = kTileSpritesheet;
 }
@@ -105,7 +106,7 @@ void Game::DrawGrid(Grid grid) {
     };
     grid_view_start_position_.x = std::clamp(grid_view_start_position_.x, 0, grid_size_.x - 1);
     grid_view_start_position_.y = std::clamp(grid_view_start_position_.y, 0, grid_size_.y - 1);
-    
+
     grid_view_end_position_ = {
         static_cast<int>(camera_.view_end_position_.x / kTileResolution), 
         static_cast<int>(camera_.view_end_position_.y / kTileResolution)
@@ -124,7 +125,7 @@ void Game::DrawGrid(Grid grid) {
 
 void Game::DrawTile(Tile& tile, int x, int y) {
     if (tile.type_changed){
-        SetTileSpriteTexture(tile_sprite_, kTileSpritesheet, kTileResolution, tile.GetType());
+        SetSpriteTileTexture(tile_sprite_, kTileSpritesheet, kTileResolution, tile.GetType());
     }
     tile.type_changed = false; 
 
@@ -176,39 +177,39 @@ void Game::UpdateMouseVariables() {
 sf::Time Game::GetDeltaTime() {return delta_time_;}
 
 
-void Game::SetTileSpriteTexture(sf::Sprite& sprite, const sf::Texture& tile_spritesheet, int kTileResolution, int tile_type) {
+void Game::SetSpriteTileTexture(sf::Sprite& sprite, const sf::Texture& tile_spritesheet, int kTileResolution, int tile_type) {
     switch (tile_type)
     {
     case 1: //stone
-        GetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);
+        SetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);
         break;
     case 2: //stone_floor
-        GetTextureFromSpritesheet(1, 0, tile_spritesheet, kTileResolution, sprite);
+        SetTextureFromSpritesheet(1, 0, tile_spritesheet, kTileResolution, sprite);
         break;
     case 3: //gem
-        GetTextureFromSpritesheet(2, 0, tile_spritesheet, kTileResolution, sprite);
+        SetTextureFromSpritesheet(2, 0, tile_spritesheet, kTileResolution, sprite);
         break;
     case 4: //gold
-        GetTextureFromSpritesheet(3, 0, tile_spritesheet, kTileResolution, sprite);
+        SetTextureFromSpritesheet(3, 0, tile_spritesheet, kTileResolution, sprite);
         break;
     case 5: //trap
-        GetTextureFromSpritesheet(0, 1, tile_spritesheet, kTileResolution, sprite);
+        SetTextureFromSpritesheet(0, 1, tile_spritesheet, kTileResolution, sprite);
         break;
     case 6: //pebbles
-        GetTextureFromSpritesheet(2, 1, tile_spritesheet, kTileResolution, sprite);
+        SetTextureFromSpritesheet(2, 1, tile_spritesheet, kTileResolution, sprite);
         break;
     case 7: //crate
-        GetTextureFromSpritesheet(1, 1, tile_spritesheet, kTileResolution, sprite);
+        SetTextureFromSpritesheet(1, 1, tile_spritesheet, kTileResolution, sprite);
         break;
     
     default:
-        GetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);;
+        SetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);;
         break;
     }
 }
 
 
-void Game::GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, 
+void Game::SetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, 
     int resolution, sf::Sprite& sprite) {
 
     sprite.setTexture(spritesheet);
