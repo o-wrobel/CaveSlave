@@ -34,6 +34,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
 {    
     if(framerate_limit) {window_.setFramerateLimit(framerate_limit);}
     // window_.setIcon();
+    SetTileTextures();
 
     user_interface_.tile_preview_.kTileSpritesheet = kTileSpritesheet;
 }
@@ -174,6 +175,13 @@ void Game::UpdateMouseVariables() {
 }
 
 
+void Game::SetTileTextures() {
+    for(int i = 0; i < kTileTypeCount; i++){
+        tile_textures_[i] = GetSpriteTileTexture(kTileSpritesheet, kTileResolution, i);
+    }
+}
+
+
 sf::Time Game::GetDeltaTime() {return delta_time_;}
 
 
@@ -215,4 +223,48 @@ void Game::SetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture
     sprite.setTexture(spritesheet);
     sprite.setTextureRect(sf::IntRect({index_x * resolution, index_y * resolution}, {resolution, resolution}));
 }
+
+// ------------------------------------------------------
+
+sf::Texture Game::GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, 
+    int resolution) {
+    
+    sf::Sprite sprite(spritesheet);
+    sprite.setTextureRect(sf::IntRect({index_x * resolution, index_y * resolution}, {resolution, resolution}));
+    return sf::Texture(sprite.getTexture());
+}
+
+
+sf::Texture Game::GetSpriteTileTexture(const sf::Texture& tile_spritesheet, int kTileResolution, int tile_type) {
+    switch (tile_type)
+    {
+    case 1: //stone
+        return GetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution);
+        break;
+    case 2: //stone_floor
+        return GetTextureFromSpritesheet(1, 0, tile_spritesheet, kTileResolution);
+        break;
+    case 3: //gem
+        return GetTextureFromSpritesheet(2, 0, tile_spritesheet, kTileResolution);
+        break;
+    case 4: //gold
+        return GetTextureFromSpritesheet(3, 0, tile_spritesheet, kTileResolution);
+        break;
+    case 5: //trap
+        return GetTextureFromSpritesheet(0, 1, tile_spritesheet, kTileResolution);
+        break;
+    case 6: //pebbles
+        return GetTextureFromSpritesheet(2, 1, tile_spritesheet, kTileResolution);
+        break;
+    case 7: //crate
+        return GetTextureFromSpritesheet(1, 1, tile_spritesheet, kTileResolution);
+        break;
+    
+    default:
+        return GetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution);;
+        break;
+    }
+}
+
+
 

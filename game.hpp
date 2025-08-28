@@ -37,10 +37,15 @@ class Game {
         void DrawGrid(Grid grid);
         void DrawTile(Tile& tile, int x, int y);
         void UpdateMouseVariables();
+        void SetTileTextures();
         
         static void SetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
+        static sf::Texture GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, int resolution);
 
     public:
+
+        const int kTileResolution;
+        static const int kTileTypeCount = 8;
 
         sf::RenderWindow window_;
         sf::Font font_;
@@ -50,13 +55,13 @@ class Game {
         
         sf::Time delta_time_;
         const sf::Texture kTileSpritesheet;
+        std::array<sf::Texture, kTileTypeCount> tile_textures_;
 
         sf::Vector2i mouse_position_;
         sf::Vector2f mouse_world_position_;
         sf::Vector2i mouse_grid_position_;
 
-        const int kTileResolution;
-        static const int kTileTypeCount = 8;
+        
         int tile_place_type_;
 
         Game(unsigned int window_size_x, unsigned int window_size_y, int framerate_limit = 0); // Constructor declaration
@@ -65,6 +70,7 @@ class Game {
         void PlaceTile(sf::Vector2i mouse_position, bool mouse_button_held);
         void NextTilePlaceType();
         static void SetSpriteTileTexture(sf::Sprite& sprite, const sf::Texture& tile_spritesheet, int resolution, int tile_type);
+        static sf::Texture GetSpriteTileTexture(const sf::Texture& tile_spritesheet, int resolution, int tile_type);
         sf::Time GetDeltaTime();
         
 };
