@@ -24,9 +24,6 @@ private:
     int lowest_framerate_;
     int average_framerate_;
 
-    // std::array<int, 10> framerate_records_;
-    // int record_index_;
-
 public:
     FPSCounter(const sf::Font& font);
     void Update(const sf::Time& delta_time);
@@ -50,8 +47,7 @@ public:
     
     int tile_type_;
     TilePreview(sf::Vector2f position, const std::vector<sf::Texture>& tile_textures, int tile_resolution, int tile_type_count);
-    void NextTileType();
-    void Update();
+    void Update(int tile_type);
     void Draw(sf::RenderWindow& window);
 
 };
@@ -71,12 +67,10 @@ private:
     sf::Sprite sprite_; 
 public:
     
-    
     int tile_type_;
 
     TileOverlay(const std::vector<sf::Texture>& tile_textures, int tile_resolution, int tile_type_count);
-    void NextTileType();
-    void Update(const sf::Vector2i& grid_position);
+    void Update(const sf::Vector2i& grid_position, int tile_type);
     void Draw(sf::RenderWindow& window);
 };
 

@@ -128,7 +128,6 @@ void Game::DrawGrid(Grid grid) {
 void Game::DrawTile(Tile& tile, int x, int y) {
     if (tile.type_changed){
         tile_sprite_.setTexture(tile_textures_.at(tile.GetType()));
-        // SetSpriteTileTexture(tile_sprite_, kTileSpritesheet, kTileResolution, tile.GetType());
     }
     tile.type_changed = false; 
 
@@ -161,8 +160,6 @@ void Game::NextTilePlaceType() {
     if (tile_place_type_ >= kTileTypeCount) {
             tile_place_type_ = 1;
         }
-    user_interface_.tile_preview_.tile_type_ = tile_place_type_;
-    user_interface_.tile_overlay_.tile_type_ = tile_place_type_;
     return;
 }
 

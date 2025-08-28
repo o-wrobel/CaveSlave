@@ -24,8 +24,8 @@ UserInterface::UserInterface(Game& game)
 
 
 void UserInterface::Update() {
-    tile_preview_.Update();
-    tile_overlay_.Update(game_.mouse_grid_position_);
+    tile_preview_.Update(game_.tile_place_type_);
+    tile_overlay_.Update(game_.mouse_grid_position_, game_.tile_place_type_);
     fps_counter_.Update(game_.delta_time_);
     
     return;
@@ -72,13 +72,8 @@ TilePreview::TilePreview(sf::Vector2f position, const std::vector<sf::Texture>& 
 }
 
 
-void TilePreview::NextTileType(){
-    tile_type_++;
-    if (tile_type_ >= kTileTypeCount) {tile_type_ = 1;}
-}
-
-
-void TilePreview::Update(){
+void TilePreview::Update(int tile_type){
+    tile_type_ = tile_type;
     sprite_.setTexture(kTileTextures.at(tile_type_));
 }
 
@@ -107,21 +102,17 @@ TileOverlay::TileOverlay(const std::vector<sf::Texture>& tile_textures, int tile
     sprite_rect_.setOutlineThickness(-1.f);
     sprite_rect_.setOutlineColor(sf::Color(255, 255, 255, 240));
 
- }
-
-
-void TileOverlay::NextTileType(){
-    tile_type_++;
-    if (tile_type_ >= kTileTypeCount) {tile_type_ = 1;}
 }
 
 
-void TileOverlay::Update(const sf::Vector2i& grid_position){
-    // grid_position_ = kGame.mouse_grid_position_;
+void TileOverlay::Update(const sf::Vector2i& grid_position, int tile_type){
+    tile_type_ = tile_type;
     grid_position_ = grid_position;
+
     sprite_rect_.setPosition({grid_position_.x * kTileResolution * 1.f, grid_position_.y * kTileResolution * 1.f});
     sprite_.setPosition({grid_position_.x * kTileResolution * 1.f, grid_position_.y * kTileResolution * 1.f});
     background_.setPosition({grid_position_.x * kTileResolution * 1.f, grid_position_.y * kTileResolution * 1.f});
+
     sprite_.setTexture(kTileTextures.at(tile_type_));
     
 }
