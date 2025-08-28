@@ -126,7 +126,8 @@ void Game::DrawGrid(Grid grid) {
 
 void Game::DrawTile(Tile& tile, int x, int y) {
     if (tile.type_changed){
-        SetSpriteTileTexture(tile_sprite_, kTileSpritesheet, kTileResolution, tile.GetType());
+        tile_sprite_.setTexture(tile_textures_.at(tile.GetType()));
+        // SetSpriteTileTexture(tile_sprite_, kTileSpritesheet, kTileResolution, tile.GetType());
     }
     tile.type_changed = false; 
 
@@ -228,10 +229,12 @@ void Game::SetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture
 
 sf::Texture Game::GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, 
     int resolution) {
-    
-    sf::Sprite sprite(spritesheet);
-    sprite.setTextureRect(sf::IntRect({index_x * resolution, index_y * resolution}, {resolution, resolution}));
-    return sf::Texture(sprite.getTexture());
+
+    sf::IntRect rect({index_x * resolution, index_y * resolution}, {resolution, resolution});
+    sf::Texture subTexture(spritesheet.copyToImage(), false, rect);
+
+    return subTexture;
+
 }
 
 
