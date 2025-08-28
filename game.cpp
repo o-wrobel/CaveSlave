@@ -162,6 +162,7 @@ void Game::NextTilePlaceType() {
             tile_place_type_ = 1;
         }
     user_interface_.tile_preview_.tile_type_ = tile_place_type_;
+    user_interface_.tile_overlay_.tile_type_ = tile_place_type_;
     return;
 }
 

@@ -53,19 +53,29 @@ public:
     void NextTileType();
     void Update();
     void Draw(sf::RenderWindow& window);
-    sf::RectangleShape& GetBackground();
 
 };
 
 
 class TileOverlay{
 private:
-    const int kTileResolution_;
-    sf::Vector2i grid_position_; 
-    sf::RectangleShape sprite_;
+    const int kTileResolution;
+    const int kTileTypeCount;
+    const std::vector<sf::Texture>& kTileTextures;
 
+    sf::Vector2i grid_position_; 
+    sf::RectangleShape background_;
+    sf::RectangleShape sprite_rect_;
+
+    sf::Texture tile_texture_;
+    sf::Sprite sprite_; 
 public:
-    TileOverlay(int tile_resolution);
+    
+    
+    int tile_type_;
+
+    TileOverlay(const std::vector<sf::Texture>& tile_textures, int tile_resolution, int tile_type_count);
+    void NextTileType();
     void Update(const sf::Vector2i& grid_position);
     void Draw(sf::RenderWindow& window);
 };

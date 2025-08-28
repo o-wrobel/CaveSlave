@@ -12,7 +12,7 @@ UserInterface::UserInterface(Game& game)
     
     kTileResolution(8), //game_.kTileResolution doesn't work for some reason // NEEDS TO BE FIXED
     tile_preview_({window_.getSize().x - 60.f, 60.f}, game_.tile_textures_, kTileResolution, game_.kTileTypeCount),
-    tile_overlay_(kTileResolution),
+    tile_overlay_(game_.tile_textures_, kTileResolution, game_.kTileTypeCount),
     fps_counter_(game_.font_),
 
     my_circle_(6)
@@ -91,25 +91,46 @@ void TilePreview::Draw(sf::RenderWindow& window){
 // TILE OVERLAY
 
 
-TileOverlay::TileOverlay(int tile_resolution)
- : kTileResolution_(tile_resolution),
-   sprite_(sf::Vector2f(kTileResolution_, kTileResolution_))
+TileOverlay::TileOverlay(const std::vector<sf::Texture>& tile_textures, int tile_resolution, int tile_type_count)
+ :  kTileResolution(tile_resolution),
+    kTileTypeCount(tile_type_count), 
+    kTileTextures(tile_textures),
+    sprite_rect_(sf::Vector2f(kTileResolution, kTileResolution)),
+    tile_texture_(sf::Vector2u(kTileResolution, kTileResolution)),
+    background_(sf::Vector2f(kTileResolution, kTileResolution)),
+    sprite_(tile_texture_),
+    tile_type_(1) //THIS SHIT HAS TO BE DECLARED IT DOES NOT DEFAULT TO ZERO
  {
-    sprite_.setFillColor(sf::Color::Transparent);
-    sprite_.setOutlineThickness(-1.f);
-    sprite_.setOutlineColor(sf::Color(255, 255, 255, 170));
+    background_.setFillColor(sf::Color(0, 0, 0, 200));
+
+    sprite_rect_.setFillColor(sf::Color::Transparent);
+    sprite_rect_.setOutlineThickness(-1.f);
+    sprite_rect_.setOutlineColor(sf::Color(255, 255, 255, 240));
+
  }
+
+
+void TileOverlay::NextTileType(){
+    tile_type_++;
+    if (tile_type_ >= kTileTypeCount) {tile_type_ = 1;}
+}
 
 
 void TileOverlay::Update(const sf::Vector2i& grid_position){
     // grid_position_ = kGame.mouse_grid_position_;
     grid_position_ = grid_position;
-    sprite_.setPosition({grid_position_.x * kTileResolution_ * 1.f, grid_position_.y * kTileResolution_ * 1.f}); 
+    sprite_rect_.setPosition({grid_position_.x * kTileResolution * 1.f, grid_position_.y * kTileResolution * 1.f});
+    sprite_.setPosition({grid_position_.x * kTileResolution * 1.f, grid_position_.y * kTileResolution * 1.f});
+    background_.setPosition({grid_position_.x * kTileResolution * 1.f, grid_position_.y * kTileResolution * 1.f});
+    sprite_.setTexture(kTileTextures.at(tile_type_));
+    
 }
 
 
 void TileOverlay::Draw(sf::RenderWindow& window){
+    window.draw(background_);
     window.draw(sprite_);
+    window.draw(sprite_rect_);
 }
 
 
