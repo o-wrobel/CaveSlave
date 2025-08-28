@@ -2,7 +2,7 @@
 #define USER_INTERFACE_HPP
 
 #include <SFML/Graphics.hpp>
-// #include "game.hpp"
+#include <vector>
 
 class Game;
 
@@ -27,19 +27,18 @@ class TilePreview{
 private:
     const int kTileResolution;
     const int kTileTypeCount;
+    const std::vector<sf::Texture>& kTileTextures;
 
     sf::Vector2f position_;
+    sf::RectangleShape background_;
     
     sf::Texture tile_texture_;
     
-    
-
 public:
-    sf::Texture kTileSpritesheet;
-    sf::Sprite sprite_;
-    sf::RectangleShape background_;
+    sf::Sprite sprite_; // causes bugs when private for some reason
+    
     int tile_type_;
-    TilePreview(sf::Vector2f position, const sf::Texture& spritesheet, int tile_resolution, int tile_type_count);
+    TilePreview(sf::Vector2f position, const std::vector<sf::Texture>& tile_textures, int tile_resolution, int tile_type_count);
     void NextTileType();
     void Update();
     void Draw(sf::RenderWindow& window);
@@ -68,8 +67,6 @@ private:
     sf::RenderWindow& window_;
     int kTileResolution;
 
-    sf::Texture placeholder;
-
 public:
 
     TilePreview tile_preview_;
@@ -77,7 +74,6 @@ public:
     sf::CircleShape my_circle_;
     FPSCounter fps_counter_;
 
-    UserInterface();
     UserInterface(Game& game);
     void Update();
     void Draw();

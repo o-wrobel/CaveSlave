@@ -10,10 +10,8 @@ UserInterface::UserInterface(Game& game)
     : game_(game),
     window_(game_.window_),
     
-    // kTileSpritesheet(game_.kTileSpritesheet),
-    placeholder(sf::Vector2u(1, 1)),
-    kTileResolution(8), //game_.kTileResolution doesn't work for some reason
-    tile_preview_({window_.getSize().x - 60.f, 60.f}, placeholder, kTileResolution, game_.kTileTypeCount),
+    kTileResolution(8), //game_.kTileResolution doesn't work for some reason // NEEDS TO BE FIXED
+    tile_preview_({window_.getSize().x - 60.f, 60.f}, game_.tile_textures_, kTileResolution, game_.kTileTypeCount),
     tile_overlay_(game_, kTileResolution),
     fps_counter_(game_.font_),
 
@@ -46,10 +44,11 @@ void UserInterface::Draw() {
 // TILE PREVIEW
 
 
-TilePreview::TilePreview(sf::Vector2f position, const sf::Texture& spritesheet, int tile_resolution, int tile_type_count) 
+TilePreview::TilePreview(sf::Vector2f position, const std::vector<sf::Texture>& tile_textures, 
+    int tile_resolution, int tile_type_count) 
     : kTileResolution(tile_resolution), 
     kTileTypeCount(tile_type_count), 
-    kTileSpritesheet(spritesheet),
+    kTileTextures(tile_textures),
 
     position_(position),
 
@@ -76,12 +75,14 @@ TilePreview::TilePreview(sf::Vector2f position, const sf::Texture& spritesheet, 
 void TilePreview::NextTileType(){
     tile_type_++;
     if (tile_type_ >= kTileTypeCount) {tile_type_ = 1;}
-    Game::SetSpriteTileTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
+    // Game::SetSpriteTileTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
+    sprite_.setTexture(kTileTextures.at(tile_type_));
 }
 
 
 void TilePreview::Update(){
-    Game::SetSpriteTileTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
+    sprite_.setTexture(kTileTextures.at(tile_type_));
+    // Game::SetSpriteTileTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
 }
 
 

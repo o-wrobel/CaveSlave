@@ -36,8 +36,6 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
     if(framerate_limit) {window_.setFramerateLimit(framerate_limit);}
     // window_.setIcon();
     SetTileTextures();
-
-    user_interface_.tile_preview_.kTileSpritesheet = kTileSpritesheet;
 }
 
 
