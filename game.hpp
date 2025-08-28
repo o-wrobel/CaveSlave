@@ -2,13 +2,13 @@
 #define GAME_HPP
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 #include "grid.hpp"
 #include "camera.hpp"
 #include "input_handler.hpp"
 #include "user_interface.hpp"
 
-// class UserInterface;
 
 class Game {
     private:
@@ -55,7 +55,7 @@ class Game {
         
         sf::Time delta_time_;
         const sf::Texture kTileSpritesheet;
-        std::array<sf::Texture, kTileTypeCount> tile_textures_;
+        std::vector<sf::Texture> tile_textures_;
 
         sf::Vector2i mouse_position_;
         sf::Vector2f mouse_world_position_;

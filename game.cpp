@@ -23,6 +23,7 @@ Game::Game(unsigned int window_size_x, unsigned int window_size_y, int framerate
     clock_(),
 
     tile_texture_(sf::Vector2u(8, 8)),
+    tile_textures_(kTileTypeCount),
 
     tile_sprite_(tile_texture_),
 
