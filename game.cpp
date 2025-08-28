@@ -44,7 +44,8 @@ void Game::GameLoop() {
     while (window_.isOpen())
     {        
         delta_time_ = clock_.restart();
-        user_interface_.Update();
+        user_interface_.my_circle_.setFillColor(sf::Color::Blue);
+        // user_interface_.Update();
         
         CheckEvents(); // check all the window's events that were triggered since the last iteration of the loop
         input_handler_.CheckInput();
@@ -55,8 +56,9 @@ void Game::GameLoop() {
         camera_.Update();
 
         input_handler_.ExecuteInputsGame(); 
-        user_interface_.tile_preview_.Update();
-        user_interface_.tile_overlay_.Update();
+        user_interface_.Update();
+        // user_interface_.tile_preview_.Update();
+        // user_interface_.tile_overlay_.Update();
         
         //view stuff
         view_ = camera_.GetView();
@@ -184,47 +186,6 @@ void Game::SetTileTextures() {
 
 sf::Time Game::GetDeltaTime() {return delta_time_;}
 
-
-void Game::SetSpriteTileTexture(sf::Sprite& sprite, const sf::Texture& tile_spritesheet, int kTileResolution, int tile_type) {
-    switch (tile_type)
-    {
-    case 1: //stone
-        SetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);
-        break;
-    case 2: //stone_floor
-        SetTextureFromSpritesheet(1, 0, tile_spritesheet, kTileResolution, sprite);
-        break;
-    case 3: //gem
-        SetTextureFromSpritesheet(2, 0, tile_spritesheet, kTileResolution, sprite);
-        break;
-    case 4: //gold
-        SetTextureFromSpritesheet(3, 0, tile_spritesheet, kTileResolution, sprite);
-        break;
-    case 5: //trap
-        SetTextureFromSpritesheet(0, 1, tile_spritesheet, kTileResolution, sprite);
-        break;
-    case 6: //pebbles
-        SetTextureFromSpritesheet(2, 1, tile_spritesheet, kTileResolution, sprite);
-        break;
-    case 7: //crate
-        SetTextureFromSpritesheet(1, 1, tile_spritesheet, kTileResolution, sprite);
-        break;
-    
-    default:
-        SetTextureFromSpritesheet(0, 0, tile_spritesheet, kTileResolution, sprite);;
-        break;
-    }
-}
-
-
-void Game::SetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, 
-    int resolution, sf::Sprite& sprite) {
-
-    sprite.setTexture(spritesheet);
-    sprite.setTextureRect(sf::IntRect({index_x * resolution, index_y * resolution}, {resolution, resolution}));
-}
-
-// ------------------------------------------------------
 
 sf::Texture Game::GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, 
     int resolution) {

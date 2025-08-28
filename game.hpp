@@ -38,8 +38,6 @@ class Game {
         void DrawTile(Tile& tile, int x, int y);
         void UpdateMouseVariables();
         void SetTileTextures();
-        
-        static void SetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, int resolution, sf::Sprite& sprite);
         static sf::Texture GetTextureFromSpritesheet(int index_x, int index_y, const sf::Texture& spritesheet, int resolution);
 
     public:
@@ -69,7 +67,6 @@ class Game {
 
         void PlaceTile(sf::Vector2i mouse_position, bool mouse_button_held);
         void NextTilePlaceType();
-        static void SetSpriteTileTexture(sf::Sprite& sprite, const sf::Texture& tile_spritesheet, int resolution, int tile_type);
         static sf::Texture GetSpriteTileTexture(const sf::Texture& tile_spritesheet, int resolution, int tile_type);
         sf::Time GetDeltaTime();
         

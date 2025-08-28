@@ -12,20 +12,20 @@ UserInterface::UserInterface(Game& game)
     
     kTileResolution(8), //game_.kTileResolution doesn't work for some reason // NEEDS TO BE FIXED
     tile_preview_({window_.getSize().x - 60.f, 60.f}, game_.tile_textures_, kTileResolution, game_.kTileTypeCount),
-    tile_overlay_(game_, kTileResolution),
+    tile_overlay_(kTileResolution),
     fps_counter_(game_.font_),
 
     my_circle_(6)
 {
     my_circle_.setFillColor(sf::Color::Blue);
     my_circle_.setOrigin({my_circle_.getRadius(), my_circle_.getRadius()});
-    my_circle_.setPosition({(30) * 1.f, (50) * 1.f}); 
+    my_circle_.setPosition({(30) * 1.f, game_.window_.getSize().y - (30) * 1.f}); 
 }
 
 
 void UserInterface::Update() {
-    my_circle_.setFillColor(sf::Color::Blue);
     tile_preview_.Update();
+    tile_overlay_.Update(game_.mouse_grid_position_);
     fps_counter_.Update(game_.delta_time_);
     
     return;
@@ -75,14 +75,11 @@ TilePreview::TilePreview(sf::Vector2f position, const std::vector<sf::Texture>& 
 void TilePreview::NextTileType(){
     tile_type_++;
     if (tile_type_ >= kTileTypeCount) {tile_type_ = 1;}
-    // Game::SetSpriteTileTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
-    sprite_.setTexture(kTileTextures.at(tile_type_));
 }
 
 
 void TilePreview::Update(){
     sprite_.setTexture(kTileTextures.at(tile_type_));
-    // Game::SetSpriteTileTexture(sprite_, kTileSpritesheet, kTileResolution, tile_type_);
 }
 
 
@@ -94,9 +91,8 @@ void TilePreview::Draw(sf::RenderWindow& window){
 // TILE OVERLAY
 
 
-TileOverlay::TileOverlay(const Game& game, int tile_resolution)
- : kGame(game),
-   kTileResolution_(tile_resolution),
+TileOverlay::TileOverlay(int tile_resolution)
+ : kTileResolution_(tile_resolution),
    sprite_(sf::Vector2f(kTileResolution_, kTileResolution_))
  {
     sprite_.setFillColor(sf::Color::Transparent);
@@ -105,8 +101,9 @@ TileOverlay::TileOverlay(const Game& game, int tile_resolution)
  }
 
 
-void TileOverlay::Update(){
-    grid_position_ = kGame.mouse_grid_position_;
+void TileOverlay::Update(const sf::Vector2i& grid_position){
+    // grid_position_ = kGame.mouse_grid_position_;
+    grid_position_ = grid_position;
     sprite_.setPosition({grid_position_.x * kTileResolution_ * 1.f, grid_position_.y * kTileResolution_ * 1.f}); 
 }
 
@@ -121,23 +118,41 @@ void TileOverlay::Draw(sf::RenderWindow& window){
 
 FPSCounter::FPSCounter(const sf::Font& font)
     :  frequency_(0.1f),
+    frequency_2_(1.f),
     font_(font),
     text_(font_) ,
     text_size_(24)
 {   
     timer_.restart();
+    timer_2_.restart();
     text_.setCharacterSize(text_size_);
     text_.setFillColor(sf::Color::White);
     text_.setPosition({10.f, 10.f});
 }
 
 void FPSCounter::Update(const sf::Time& delta_time) {
+    if (timer_2_.getElapsedTime().asSeconds() >= frequency_2_) {
+        timer_2_.restart();
+        average_framerate_ = (highest_framerate_ + lowest_framerate_) / 2;
+        highest_framerate_ = framerate_;
+        lowest_framerate_ = framerate_;
+    }
     if (timer_.getElapsedTime().asSeconds() >= frequency_) {
         timer_.restart();
         framerate_ = static_cast<int>(1.f / delta_time.asSeconds());
+
+        if (framerate_ > highest_framerate_) {
+            highest_framerate_ = framerate_;
+        }
+        if (framerate_ < lowest_framerate_) {
+            lowest_framerate_ = framerate_;
+        }
+
         text_.setString(
             "FPS: " + std::to_string(framerate_) + '\n'
-            + "Highest: "
+            // + "Highest: " + std::to_string(highest_framerate_) + '\n'
+            // + "Lowest: " + std::to_string(lowest_framerate_) + '\n'
+            + "Average: " + std::to_string(average_framerate_) + '\n'
         );
     }
 }

@@ -11,10 +11,21 @@ class FPSCounter{
 private:
     sf::Clock timer_;
     const float frequency_;
+
+    sf::Clock timer_2_;
+    const float frequency_2_;
+
     const sf::Font font_;
     sf::Text text_;
     const int text_size_;
+
     int framerate_;
+    int highest_framerate_;
+    int lowest_framerate_;
+    int average_framerate_;
+
+    // std::array<int, 10> framerate_records_;
+    // int record_index_;
 
 public:
     FPSCounter(const sf::Font& font);
@@ -49,14 +60,13 @@ public:
 
 class TileOverlay{
 private:
-    const Game& kGame;
     const int kTileResolution_;
     sf::Vector2i grid_position_; 
     sf::RectangleShape sprite_;
 
 public:
-    TileOverlay(const Game& game, int tile_resolution);
-    void Update();
+    TileOverlay(int tile_resolution);
+    void Update(const sf::Vector2i& grid_position);
     void Draw(sf::RenderWindow& window);
 };
 
